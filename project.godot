@@ -1,0 +1,73 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Reference",
+"class": "CardDictionary",
+"language": "GDScript",
+"path": "res://scripts/classes/card_dictionary.gd"
+}, {
+"base": "Node2D",
+"class": "GameCard",
+"language": "GDScript",
+"path": "res://scripts/scene_scripts/game_card.gd"
+}, {
+"base": "GameCard",
+"class": "GameCardPlayer",
+"language": "GDScript",
+"path": "res://scripts/scene_scripts/game_card_player.gd"
+} ]
+_global_script_class_icons={
+"CardDictionary": "",
+"GameCard": "",
+"GameCardPlayer": ""
+}
+
+[application]
+
+config/name="Card Joust"
+run/main_scene="res://scenes/scn_ui_main_menu.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+CardCollection="*res://scripts/card_collection.gd"
+SceneController="*res://scripts/scene_controller.gd"
+SettingsController="*res://scripts/settings_controller.gd"
+ScnBackground="*res://scenes/scn_background.tscn"
+ScnUiOverlay="*res://scenes/scn_ui_overlay.tscn"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/size/fullscreen=true
+window/stretch/mode="2d"
+window/stretch/aspect="expand"
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[input]
+
+mouse_left={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"

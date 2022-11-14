@@ -1,0 +1,53 @@
+extends Area2D
+# Detects when the mouse is hovering over a card.
+# Finds the topmost card when cards overlap.
+
+
+signal card_selected(card)
+signal none_selected
+
+var _selected
+
+
+func _process(delta):
+	position = get_global_mouse_position()
+	
+	var overlaps = get_overlapping_bodies()
+	match len(overlaps):
+		0:
+			if _selected:
+				_selected.deselect()
+				_selected = null
+				emit_signal("none_selected")
+		1:
+			if overlaps[0].is_in_group("cards"):
+				if _selected != overlaps[0]:
+					if _selected:
+						_selected.deselect()
+					overlaps[0].select()
+					_selected = overlaps[0]
+					emit_signal("card_selected", _selected)
+			else:
+				if _selected:
+					_selected.deselect()
+					_selected = null
+					emit_signal("none_selected")
+		_:
+			var top_index = -1
+			var top_item = null
+			for o in overlaps:
+				if o.is_in_group("cards") and o.z_index > top_index:
+					top_index = o.z_index
+					top_item = o
+			if top_item:
+				if _selected != top_item:
+					if _selected:
+						_selected.deselect()
+					overlaps[0].select()
+					_selected = overlaps[0]
+					emit_signal("card_selected", _selected)
+			elif _selected:
+				if _selected:
+					_selected.deselect()
+					_selected = null
+					emit_signal("none_selected")
