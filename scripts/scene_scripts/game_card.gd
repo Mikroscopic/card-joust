@@ -103,19 +103,19 @@ func slide_to_position(pos, time):
 	yield($Tween, "tween_completed")
 
 
-func animate(animation):
+func animate(animation, pos_other = global_position):
 	var s = SettingsController.graphics_animate_speed
 	match animation:
 		"shake":
 			$Tween.interpolate_property($CardVisual, "position", Vector2(0, 0), Vector2(-10, 0), 0.025*s, Tween.TRANS_LINEAR)
 			$Tween.interpolate_property($CardVisual, "position", Vector2(-10, 0), Vector2(10, 0), 0.05*s, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.025)
 			$Tween.interpolate_property($CardVisual, "position", Vector2(10, 0), Vector2(0, 0), 0.025*s, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.075)
-		"move_forward":
-			var offset = Vector2(0, -20) if _card_owner == 0 else Vector2(0, 20)
+		"attack_start":
+			var offset = (pos_other - global_position).normalized() * 20
 			$Tween.interpolate_property($CardVisual, "position", Vector2(0, 0), offset, 0.05*s, Tween.TRANS_LINEAR)
-		"move_backward":
-			var offset = Vector2(0, -20) if _card_owner == 0 else Vector2(0, 20)
-			$Tween.interpolate_property($CardVisual, "position", offset, Vector2(0, 0), 0.05*s, Tween.TRANS_LINEAR)
+		"attack_end":
+			#var offset = (pos_other - global_position).normalized() * 20
+			$Tween.interpolate_property($CardVisual, "position", $CardVisual.position, Vector2(0, 0), 0.05*s, Tween.TRANS_LINEAR)
 	$Tween.start()
 	yield($Tween, "tween_all_completed")
 
@@ -134,12 +134,18 @@ func deselect():
 func find_targets():
 	_targets.clear()
 	
+	var opposite_space = _enemy_lane.size() - _lane_space - 1
 	match card_id:
-		"":
-			pass
+		"MEDIEVAL_ARCHER":
+			var space = opposite_space
+			while space >= 0:
+				if _enemy_lane[space]:
+					_targets.append(space)
+					break
+				space -= 1
 		_:
-			var opposite_space = _enemy_lane.size() - _lane_space - 1
 			_targets.append(opposite_space)
+	print("DEBUG: " + card_name + " is targeting spaces " + str(_targets))
 
 
 func attack():
@@ -167,13 +173,14 @@ func perform_played():
 
 
 func perform_pre_attack():
+	find_targets()
 	yield(get_tree(), "idle_frame")
 
 
 func perform_attack():
 	for t in _targets:
 		if _enemy_lane[t]:
-			yield(animate("move_forward"), "completed")
+			yield(animate("attack_start", _enemy_lane[t].global_position), "completed")
 			match card_id:
 				"MEDIEVAL_THIEF":
 					var v = _enemy_lane[t].value
@@ -183,7 +190,7 @@ func perform_attack():
 				_:
 					pass
 			var opposing_card_killed = _enemy_lane[t].take_damage(self, power)
-			yield(animate("move_backward"), "completed")
+			yield(animate("attack_end"), "completed")
 	yield(get_tree(), "idle_frame")
 
 

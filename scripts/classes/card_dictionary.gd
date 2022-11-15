@@ -33,12 +33,24 @@ const cards = {
 	},
 	"MEDIEVAL_THIEF": {
 		"name": "THIEF",
-		"description": "When attacking: Steals 1 value from the card it attacks and adds it to its own value",
+		"description": "Steals 1 value from each card it attacks and adds it " \
+			+ "to its own value.",
 		"image_bg": "",
-		"image_portrait": "",
+		"image_portrait": "cd_art_thief.png",
 		"power": 1,
 		"value": 0,
 		"health": 3,
+	},
+	"MEDIEVAL_ARCHER": {
+		"name": "ARCHER",
+		"description": "If no card occupies the opposing space, this card " \
+			+ "will instead target the closest card behind that space " \
+			+ "(toward the opponent's starting space).",
+		"image_bg": "",
+		"image_portrait": "cd_art_archer.png",
+		"power": 2,
+		"value": 2,
+		"health": 2,
 	},
 }
 

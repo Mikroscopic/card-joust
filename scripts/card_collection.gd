@@ -9,9 +9,10 @@ var active_deck:Array
 func _ready():
 	collected_deck = {
 		"MEDIEVAL_PEASANT": 5,
-		"MEDIEVAL_LORD": 4,
-		"MEDIEVAL_KNIGHT": 4,
+		"MEDIEVAL_LORD": 5,
+		"MEDIEVAL_KNIGHT": 5,
 		"MEDIEVAL_THIEF": 2,
+		"MEDIEVAL_ARCHER": 3,
 	}
 	active_deck = []
 	
