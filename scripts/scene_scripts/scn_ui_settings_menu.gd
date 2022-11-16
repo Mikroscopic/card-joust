@@ -1,13 +1,16 @@
 extends Control
 
 
+signal settings_saved
+
+
 func _ready():
 	load_settings()
 
 
 func _on_BtnBack_pressed():
 	save_settings()
-	SceneController.change_scene("res://scenes/scn_ui_main_menu.tscn")
+	emit_signal("settings_saved")
 
 
 # Graphics settings

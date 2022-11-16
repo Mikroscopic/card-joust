@@ -6,8 +6,14 @@ func _on_BtnNewGame_pressed():
 
 
 func _on_BtnSettings_pressed():
-	SceneController.change_scene("res://scenes/scn_ui_settings_menu.tscn")
+	$MainMenu.hide()
+	$ScnUiSettingsMenu.show()
 
 
 func _on_BtnQuit_pressed():
 	get_tree().notification(MainLoop.NOTIFICATION_WM_QUIT_REQUEST)
+
+
+func _on_ScnUiSettingsMenu_settings_saved():
+	$ScnUiSettingsMenu.hide()
+	$MainMenu.show()
