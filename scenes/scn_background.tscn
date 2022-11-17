@@ -1,6 +1,23 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://assets/sprites/background/gravel.png" type="Texture" id=1]
+[ext_resource path="res://assets/sprites/background/bg_stars_01.png" type="Texture" id=1]
+[ext_resource path="res://assets/shaders/shdr_scroll_01.tres" type="Material" id=2]
+[ext_resource path="res://assets/sprites/background/bg_stars_02.png" type="Texture" id=3]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+
+uniform float speed;
+
+
+void fragment () {
+	COLOR = texture(TEXTURE, vec2(UV.x + TIME * speed, UV.y));
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/speed = 0.05
 
 [node name="ScnBackground" type="Control"]
 anchor_right = 1.0
@@ -12,14 +29,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="Control" type="Control" parent="CenterContainer"]
+[node name="BgStars" type="Control" parent="CenterContainer"]
 margin_left = 960.0
 margin_top = 540.0
 margin_right = 960.0
 margin_bottom = 540.0
 mouse_filter = 2
 
-[node name="Sprite" type="Sprite" parent="CenterContainer/Control"]
-modulate = Color( 0.21, 0.2685, 0.3, 0.588235 )
-scale = Vector2( 1.2, 1 )
+[node name="Sprite" type="Sprite" parent="CenterContainer/BgStars"]
+material = ExtResource( 2 )
 texture = ExtResource( 1 )
+
+[node name="Sprite2" type="Sprite" parent="CenterContainer/BgStars"]
+material = SubResource( 2 )
+texture = ExtResource( 3 )
