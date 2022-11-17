@@ -127,7 +127,6 @@ func generate_card(owner:int = 0):
 func draw_card():
 	var new_card = $GameDeck.get_card()
 	if new_card == null:
-		print("Deck is empty.")
 		return
 	new_card.connect("played", self, "_on_GameCard_played")
 	new_card.connect("scored", self, "_on_GameCard_scored")
@@ -303,16 +302,13 @@ func _on_next_phase_triggered(phase: int):
 			if card_id:
 				_enemy_hand.append(card_id)
 				enemy_choose_next_card()
-			print("DEBUG: Enemy hand: " + str(_enemy_hand) + " Enemy deck: " + str(_enemy_deck.size()))
 			emit_signal("next_phase_triggered", 0)
 
 
 func _on_GameDeck_clicked():
 	if _game_phase != 0:
-		print("Cannot draw a card now.")
 		return
 	if _scores[0] == 0:
-		print("Cannot afford to buy a card!")
 		return
 	update_score(0, -1)
 	draw_card()
@@ -320,20 +316,19 @@ func _on_GameDeck_clicked():
 
 func _on_GameCard_played(card):
 	if _game_phase != 0:
-		print("Cannot play a card now.")
 		return
 	if player_lane_cards[0]:
-		print("Already card in space.")
-	else:
-		card.disconnect("played", self, "_on_GameCard_played")
-		player_lane_cards[0] = card
-		var card_pos = card.global_position
-		$GameHand.removeCard(card)
-		$BoardCards.add_child(card)
-		card.scale = Vector2(0.8, 0.8)
-		card.global_position = card_pos
-		card.slide_to_position(player_lane_spaces[0].find_node("CenterPoint").global_position, 0.25)
-		card.perform_played()
+		return
+
+	card.disconnect("played", self, "_on_GameCard_played")
+	player_lane_cards[0] = card
+	var card_pos = card.global_position
+	$GameHand.removeCard(card)
+	$BoardCards.add_child(card)
+	card.scale = Vector2(0.8, 0.8)
+	card.global_position = card_pos
+	card.slide_to_position(player_lane_spaces[0].find_node("CenterPoint").global_position, 0.25)
+	card.perform_played()
 
 
 func _on_GameCard_scored(team, value):

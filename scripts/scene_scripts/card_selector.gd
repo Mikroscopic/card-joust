@@ -16,20 +16,23 @@ func _process(delta):
 	match len(overlaps):
 		0:
 			if _selected:
-				_selected.deselect()
+				if is_instance_valid(_selected):
+					_selected.deselect()
 				_selected = null
 				emit_signal("none_selected")
 		1:
 			if overlaps[0].is_in_group("cards"):
 				if _selected != overlaps[0]:
 					if _selected:
-						_selected.deselect()
+						if is_instance_valid(_selected):
+							_selected.deselect()
 					overlaps[0].select()
 					_selected = overlaps[0]
 					emit_signal("card_selected", _selected)
 			else:
 				if _selected:
-					_selected.deselect()
+					if is_instance_valid(_selected):
+						_selected.deselect()
 					_selected = null
 					emit_signal("none_selected")
 		_:
@@ -42,12 +45,13 @@ func _process(delta):
 			if top_item:
 				if _selected != top_item:
 					if _selected:
-						_selected.deselect()
+						if is_instance_valid(_selected):
+							_selected.deselect()
 					overlaps[0].select()
 					_selected = overlaps[0]
 					emit_signal("card_selected", _selected)
 			elif _selected:
-				if _selected:
+				if is_instance_valid(_selected):
 					_selected.deselect()
-					_selected = null
-					emit_signal("none_selected")
+				_selected = null
+				emit_signal("none_selected")

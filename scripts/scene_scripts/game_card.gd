@@ -140,7 +140,6 @@ func find_targets():
 				space -= 1
 		_:
 			_targets.append(opposite_space)
-	print("DEBUG: " + card_name + " is targeting spaces " + str(_targets))
 
 
 func attack():
