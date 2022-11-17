@@ -4,8 +4,9 @@ extends Control
 signal settings_saved
 
 
-func _ready():
-	load_settings()
+func _on_ScnUiSettingsMenu_visibility_changed():
+	if visible:
+		load_settings()
 
 
 func _on_BtnBack_pressed():
