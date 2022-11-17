@@ -98,7 +98,7 @@ func begin_battle():
 	# Draw cards for player's initial hand
 	for i in range(2):
 		draw_card()
-		yield(get_tree().create_timer(0.2 * SettingsController.graphics_animate_speed), "timeout")
+		yield(get_tree().create_timer(0.2 / SettingsController.graphics_animation_timescale), "timeout")
 	
 	enemy_choose_next_card()
 	
@@ -258,14 +258,14 @@ func _on_next_phase_triggered(phase: int):
 			
 			yield(make_cards_attack(player_lane_cards), "completed")
 			
-			yield(get_tree().create_timer(0.5 * SettingsController.graphics_animate_speed), "timeout")
+			yield(get_tree().create_timer(0.5 / SettingsController.graphics_animation_timescale), "timeout")
 			emit_signal("next_phase_triggered", 2)
 		2:	# player move
 			$DebugGamePhase.text = "player move"
 			
 			yield(move_cards(player_lane_cards), "completed")
 			
-			yield(get_tree().create_timer(1.0 * SettingsController.graphics_animate_speed), "timeout")
+			yield(get_tree().create_timer(1.0 / SettingsController.graphics_animation_timescale), "timeout")
 			if _scores[0] >= SCORE_GOAL:
 				emit_signal("player_won")
 			else:
@@ -278,21 +278,21 @@ func _on_next_phase_triggered(phase: int):
 				yield(enemy_play_card(_enemy_queued_card), "completed")
 				_enemy_queued_card = null
 			
-			yield(get_tree().create_timer(0.5 * SettingsController.graphics_animate_speed), "timeout")
+			yield(get_tree().create_timer(0.5 / SettingsController.graphics_animation_timescale), "timeout")
 			emit_signal("next_phase_triggered", 4)
 		4:	#enemy attack
 			$DebugGamePhase.text = "opponent attack"
 			
 			yield(make_cards_attack(enemy_lane_cards), "completed")
 			
-			yield(get_tree().create_timer(0.5 * SettingsController.graphics_animate_speed), "timeout")
+			yield(get_tree().create_timer(0.5 / SettingsController.graphics_animation_timescale), "timeout")
 			emit_signal("next_phase_triggered", 5)
 		5:	# enemy move
 			$DebugGamePhase.text = "opponent move"
 			
 			yield(move_cards(enemy_lane_cards), "completed")
 			
-			yield(get_tree().create_timer(1.0 * SettingsController.graphics_animate_speed), "timeout")
+			yield(get_tree().create_timer(1.0 / SettingsController.graphics_animation_timescale), "timeout")
 			if _scores[1] >= SCORE_GOAL:
 				emit_signal("player_lost")
 			else:

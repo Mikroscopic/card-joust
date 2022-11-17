@@ -9,6 +9,8 @@ signal scored(team, value)
 const THEME_STATS = preload("res://assets/themes/theme_cd_stats.tres")
 const THEME_STATS_DIGITS = preload("res://assets/themes/theme_cd_stats_digits.tres")
 
+export var distance_to_target: float setget set_distance_to_target
+
 # Card stats
 var card_id: String
 var card_name: String
@@ -31,6 +33,7 @@ var _enemy_lane
 var _lane_space: int
 # The space(s) that this card is targeting for its next attack
 var _targets: Array
+var _target_position: Vector2
 
 
 # Builtin functions
@@ -42,6 +45,7 @@ func _init():
 
 func _ready():
 	_targets = []
+	_target_position = global_position
 	update_stats()
 	find_node("Name").text = card_name
 	_battle_scene = get_tree().current_scene
@@ -74,6 +78,14 @@ func init (id: String):
 	return self
 
 
+# Setget functions
+
+
+func set_distance_to_target(value):
+	var angle = (_target_position - global_position).normalized()
+	$CardVisual.position = angle * value
+
+
 # Visual and animation functions
 
 
@@ -97,27 +109,10 @@ func update_stats():
 
 
 func slide_to_position(pos, time):
-	time = time * SettingsController.graphics_animate_speed
+	time = time / SettingsController.graphics_animation_timescale
 	$Tween.interpolate_property(self, "global_position", global_position, pos, time, Tween.TRANS_LINEAR)
 	$Tween.start()
 	yield($Tween, "tween_completed")
-
-
-func animate(animation, pos_other = global_position):
-	var s = SettingsController.graphics_animate_speed
-	match animation:
-		"shake":
-			$Tween.interpolate_property($CardVisual, "position", Vector2(0, 0), Vector2(-10, 0), 0.025*s, Tween.TRANS_LINEAR)
-			$Tween.interpolate_property($CardVisual, "position", Vector2(-10, 0), Vector2(10, 0), 0.05*s, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.025)
-			$Tween.interpolate_property($CardVisual, "position", Vector2(10, 0), Vector2(0, 0), 0.025*s, Tween.TRANS_LINEAR, Tween.EASE_IN, 0.075)
-		"attack_start":
-			var offset = (pos_other - global_position).normalized() * 20
-			$Tween.interpolate_property($CardVisual, "position", Vector2(0, 0), offset, 0.05*s, Tween.TRANS_LINEAR)
-		"attack_end":
-			#var offset = (pos_other - global_position).normalized() * 20
-			$Tween.interpolate_property($CardVisual, "position", $CardVisual.position, Vector2(0, 0), 0.05*s, Tween.TRANS_LINEAR)
-	$Tween.start()
-	yield($Tween, "tween_all_completed")
 
 
 func select():
@@ -180,7 +175,13 @@ func perform_pre_attack():
 func perform_attack():
 	for t in _targets:
 		if _enemy_lane[t]:
-			yield(animate("attack_start", _enemy_lane[t].global_position), "completed")
+			_target_position = _enemy_lane[t].global_position
+			$AnimationPlayer.play(
+				"attack_start",
+				-1,
+				SettingsController.graphics_animation_timescale
+			)
+			yield($AnimationPlayer, "animation_finished")
 			match card_id:
 				"MEDIEVAL_THIEF":
 					var v = _enemy_lane[t].value
@@ -190,7 +191,13 @@ func perform_attack():
 				_:
 					pass
 			var opposing_card_killed = _enemy_lane[t].take_damage(self, power)
-			yield(animate("attack_end"), "completed")
+			$AnimationPlayer.play(
+				"attack_end",
+				-1,
+				SettingsController.graphics_animation_timescale
+			)
+			yield($AnimationPlayer, "animation_finished")
+			_target_position = global_position
 	yield(get_tree(), "idle_frame")
 
 
@@ -245,7 +252,11 @@ func take_damage(attacker, dmg):
 		_:
 			health -= dmg
 			health = max(0, health)
-			animate("shake")
+			$AnimationPlayer.play(
+				"shake",
+				-1,
+				SettingsController.graphics_animation_timescale
+			)
 	update_stats()
 	
 	# die

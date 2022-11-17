@@ -1,11 +1,11 @@
 extends Node
 
 
-var graphics_resolution = 0
-var graphics_fullscreen = true
-var graphics_animate_speed = 1.0
-var graphics_animate_speed_slider = 1.0
-var graphics_roman_numerals = true
+var graphics_resolution = 0 setget set_graphics_resolution
+var graphics_fullscreen = true setget set_graphics_fullscreen
+var graphics_animation_timescale = 1.0
+var graphics_animation_time_slider = 1.0 setget set_graphics_animation_time_slider
+var graphics_roman_numerals = true setget set_graphics_roman_numerals
 
 
 func _ready():
@@ -20,13 +20,13 @@ func load_settings():
 		return
 	
 	var settings_data = parse_json(settings_file.get_as_text())
-	set_resolution(int(settings_data["resolution"]))
-	set_fullscreen(bool(settings_data["fullscreen"]))
-	set_animate_speed(float(settings_data["animate_speed"]))
-	set_roman_numerals(bool(settings_data["roman_numerals"]))
+	self.graphics_resolution = int(settings_data["resolution"])
+	self.graphics_fullscreen = bool(settings_data["fullscreen"])
+	self.graphics_animation_time_slider = float(settings_data["animation_timescale"])
+	self.graphics_roman_numerals = bool(settings_data["roman_numerals"])
 
 
-func set_resolution(v):
+func set_graphics_resolution(v):
 	graphics_resolution = v
 	var min_size
 	match graphics_resolution:
@@ -37,18 +37,20 @@ func set_resolution(v):
 	get_tree().set_screen_stretch(SceneTree.STRETCH_MODE_VIEWPORT, SceneTree.STRETCH_ASPECT_KEEP, min_size)
 
 
-func set_fullscreen(v):
+func set_graphics_fullscreen(v):
 	graphics_fullscreen = v
 	OS.window_fullscreen = graphics_fullscreen
 
 
-func set_animate_speed(v):
-	graphics_animate_speed_slider = v
+func set_graphics_animation_time_slider(v):
+	graphics_animation_time_slider = v
 	if v < 1:
-		graphics_animate_speed = -v + 2
+		# 50% - 100%
+		graphics_animation_timescale = v / 2 + 0.5
 	else:
-		graphics_animate_speed = (v - 1) / -2 + 1
+		# 100% - 200%
+		graphics_animation_timescale = v
 
 
-func set_roman_numerals(v):
+func set_graphics_roman_numerals(v):
 	graphics_roman_numerals = v

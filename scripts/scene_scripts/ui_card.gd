@@ -56,7 +56,7 @@ func init(id: String):
 
 
 func slide_to_position(pos, time):
-	time = time * SettingsController.graphics_animate_speed
+	time = time / SettingsController.graphics_animation_timescale
 	$Tween.interpolate_property(self, "global_position", global_position, pos, time, Tween.TRANS_LINEAR)
 	$Tween.start()
 	yield($Tween, "tween_completed")
