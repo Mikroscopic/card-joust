@@ -141,5 +141,6 @@ text = "Back"
 [connection signal="item_selected" from="CenterContainer/TabContainer/Graphics/HBoxContainer/DropdownResolution" to="." method="_on_DropdownResolution_item_selected"]
 [connection signal="toggled" from="CenterContainer/TabContainer/Graphics/HBoxContainer2/CheckBoxFullscreen" to="." method="_on_CheckBoxFullscreen_toggled"]
 [connection signal="drag_ended" from="CenterContainer/TabContainer/Graphics/HBoxContainer3/SliderAnimateSpeed" to="." method="_on_SliderAnimateSpeed_drag_ended"]
+[connection signal="value_changed" from="CenterContainer/TabContainer/Graphics/HBoxContainer3/SliderAnimateSpeed" to="." method="_on_SliderAnimateSpeed_value_changed"]
 [connection signal="toggled" from="CenterContainer/TabContainer/Graphics/HBoxContainer4/CheckBoxRomanNums" to="." method="_on_CheckBoxRomanNum_toggled"]
 [connection signal="pressed" from="BtnBack" to="." method="_on_BtnBack_pressed"]

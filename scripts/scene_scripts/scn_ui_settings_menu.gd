@@ -22,9 +22,8 @@ func _on_CheckBoxFullscreen_toggled(button_pressed):
 	SettingsController.set_fullscreen(button_pressed)
 
 
-func _on_SliderAnimateSpeed_drag_ended(value_changed):
-	if value_changed:
-		SettingsController.set_animate_speed(find_node("SliderAnimateSpeed").value)
+func _on_SliderAnimateSpeed_value_changed(value):
+	SettingsController.set_animate_speed(value)
 
 
 func _on_CheckBoxRomanNum_toggled(button_pressed):
