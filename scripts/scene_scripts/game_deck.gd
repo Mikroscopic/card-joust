@@ -23,9 +23,9 @@ func _ready():
 	_is_selected = false
 	
 	if _cards.size() > 0:
-		_card_margin = min(10, int(50 / _cards.size()))
+		_card_margin = min(10, int(50 / min(_cards.size(), 10)))
 	$DeckVisual/CardSprites.add_constant_override("separation", _card_margin)
-	for i in range(_cards.size()):
+	for i in range(min(_cards.size(), 10)):
 		var sprite_control = Control.new()
 		var sprite = Sprite.new()
 		sprite.texture = CARD_BACK_TEXTURE
@@ -55,11 +55,12 @@ func get_card():
 	
 	# Remove a card
 	var card_id = _cards.pop_back()
-	$DeckVisual/CardSprites.get_child(_cards.size()).queue_free()
+	if _cards.size() < 10:
+		$DeckVisual/CardSprites.get_child(_cards.size()).queue_free()
 	
 	# Reorganize the deck
 	if _cards.size() > 0:
-		_card_margin = min(10, int(50 / _cards.size()))
+		_card_margin = min(10, int(50 / $DeckVisual/CardSprites.get_child_count()))
 		$DeckVisual/CardSprites.add_constant_override("separation", _card_margin)
 	else:
 		$CollisionShape2D.set_deferred("disabled", true)
