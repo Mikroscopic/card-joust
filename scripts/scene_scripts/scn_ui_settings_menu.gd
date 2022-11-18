@@ -15,10 +15,6 @@ func _on_BtnBack_pressed():
 
 
 # Graphics settings
-func _on_DropdownResolution_item_selected(index):
-	SettingsController.graphics_resolution = index
-
-
 func _on_CheckBoxFullscreen_toggled(button_pressed):
 	SettingsController.graphics_fullscreen = button_pressed
 
@@ -26,7 +22,6 @@ func _on_CheckBoxFullscreen_toggled(button_pressed):
 func _on_SliderAnimateSpeed_value_changed(value):
 	SettingsController.graphics_animation_time_slider = value
 	
-
 
 func _on_CheckBoxRomanNum_toggled(button_pressed):
 	SettingsController.graphics_roman_numerals = button_pressed
@@ -40,7 +35,6 @@ func save_settings():
 		return
 	
 	var settings_data = {
-		"resolution":			find_node("DropdownResolution").selected,
 		"fullscreen":			find_node("CheckBoxFullscreen").pressed,
 		"animation_timescale":	find_node("SliderAnimateSpeed").value,
 		"roman_numerals":		find_node("CheckBoxRomanNums").pressed,
@@ -49,7 +43,6 @@ func save_settings():
 
 
 func load_settings():
-	find_node("DropdownResolution").selected = SettingsController.graphics_resolution
 	find_node("CheckBoxFullscreen").pressed = SettingsController.graphics_fullscreen
 	find_node("SliderAnimateSpeed").value = SettingsController.graphics_animation_time_slider
 	find_node("CheckBoxRomanNums").pressed = SettingsController.graphics_roman_numerals
