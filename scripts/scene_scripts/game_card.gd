@@ -108,8 +108,9 @@ func update_stats():
 			n.set_theme(THEME_STATS)
 
 
-func slide_to_position(pos, time):
-	time = time / SettingsController.graphics_animation_timescale
+func slide_to_position(pos, time, ignore_timescale = false):
+	if !ignore_timescale:
+		time = time / SettingsController.graphics_animation_timescale
 	$Tween.interpolate_property(self, "global_position", global_position, pos, time, Tween.TRANS_LINEAR)
 	$Tween.start()
 	yield($Tween, "tween_completed")

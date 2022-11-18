@@ -2,6 +2,8 @@ extends Node2D
 # The player's hand in battle, with the cards they can play in the current turn.
 
 
+var active setget set_active
+
 var _cards = []
 var _card_positions = []
 var _card_margin = 100
@@ -9,17 +11,17 @@ var _card_margin = 100
 
 func addCard(card):
 	var card_pos = card.global_position
-	add_child(card)
+	$Cards.add_child(card)
 	card.global_position = card_pos
 	_cards.append(card)
 	_card_positions.append(Vector2(0, 0))
-	calc_card_positions()
+	yield(calc_card_positions(), "completed")
 	card.is_in_hand = true
 
 func removeCard(card):
 	var index = _cards.find(card)
 	_cards.remove(index)
-	remove_child(card)
+	$Cards.remove_child(card)
 	_card_positions.remove(index)
 	calc_card_positions()
 	card.is_in_hand = false
@@ -34,6 +36,14 @@ func calc_card_positions():
 		card_pos.x = x
 		card_pos = card_pos + global_position
 		_card_positions[i] = card_pos
-		_cards[i].slide_to_position(card_pos, 0.1)
+		_cards[i].slide_to_position(card_pos, 0.1, true)
 		_cards[i].z_index = _cards[i].get_index()
 		x += _card_margin
+	yield(get_tree().create_timer(0.15), "timeout")
+
+
+func set_active(value):
+	for card in _cards:
+		card.find_node("CollisionShape2D").set_deferred("disabled", !value)
+	$AnimationPlayer.play("slide_offscreen", -1, -1 if value else 1, value)
+	yield($AnimationPlayer, "animation_finished")

@@ -38,7 +38,7 @@ func animate_popup(popup):
 			)
 			$Tween.start()
 			yield($Tween, "tween_completed")
-			yield(get_tree().create_timer(1.0), "timeout")
+			yield(get_tree().create_timer(1.0, false), "timeout")
 		_:
 			yield(get_tree(), "idle_frame")
 
