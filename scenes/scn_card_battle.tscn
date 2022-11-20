@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scripts/scene_scripts/scn_card_battle.gd" type="Script" id=1]
 [ext_resource path="res://objects/game_board.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://assets/themes/theme_ingame_board_score.tres" type="Theme" id=7]
 [ext_resource path="res://assets/themes/HTOWERT.TTF" type="DynamicFontData" id=8]
 [ext_resource path="res://assets/themes/fnt_hud_02.tres" type="DynamicFont" id=9]
+[ext_resource path="res://assets/themes/theme_hud_hints.tres" type="Theme" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -91,7 +92,7 @@ margin_left = 30.0
 margin_top = 370.0
 margin_right = 480.0
 margin_bottom = 670.0
-theme = ExtResource( 6 )
+theme = ExtResource( 10 )
 
 [node name="RichTextLabel" type="RichTextLabel" parent="HintBox"]
 margin_left = 20.0
