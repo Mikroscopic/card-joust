@@ -355,7 +355,16 @@ func _on_ScnCardBattle_player_won():
 
 func _on_CardSelector_card_selected(card):
 	if "card_id" in card:
-		$HintBox/RichTextLabel.bbcode_text = "[center][color=blue]" + card.card_name + "[/color][/center]\n" + card.card_description
+		$HintBox/RichTextLabel.bbcode_text = (
+			"[center][color=blue]"
+			+ card.card_name
+			+ "[/color]\n[color=grey]"
+			+ str(card.power)+ " ATK | "
+			+ str(card.value) + " VAL | "
+			+ str(card.health) + " HLT"
+			+ "[/color][/center]\n"
+			+ card.card_description
+		)
 
 
 func _on_CardSelector_none_selected():
