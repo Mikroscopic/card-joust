@@ -2,7 +2,7 @@ extends Control
 
 
 func _on_BtnNewGame_pressed():
-	SceneController.change_scene_fade("res://scenes/scn_card_battle.tscn", 1.0)
+	SceneController.change_scene_fade("res://scenes/scn_card_battle_tutorial.tscn", 1.0)
 
 
 func _on_BtnSettings_pressed():

@@ -23,11 +23,17 @@ _global_script_classes=[ {
 "class": "GameCardPlayer",
 "language": "GDScript",
 "path": "res://scripts/scene_scripts/game_card_player.gd"
+}, {
+"base": "Node2D",
+"class": "ScnCardBattle",
+"language": "GDScript",
+"path": "res://scripts/scene_scripts/scn_card_battle.gd"
 } ]
 _global_script_class_icons={
 "CardDictionary": "",
 "GameCard": "",
-"GameCardPlayer": ""
+"GameCardPlayer": "",
+"ScnCardBattle": ""
 }
 
 [application]

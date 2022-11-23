@@ -48,6 +48,13 @@ func shuffle():
 	_cards.shuffle()
 
 
+func load_top_deck(card_id: String):
+	var i = _cards.find(card_id)
+	if i >= 0:
+		var card = _cards.pop_at(i)
+		_cards.append(card)
+
+
 func get_card():
 	if _cards.size() == 0:
 		$CollisionShape2D.set_deferred("disabled", true)

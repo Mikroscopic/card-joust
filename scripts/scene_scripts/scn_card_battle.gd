@@ -1,3 +1,4 @@
+class_name ScnCardBattle
 extends Node2D
 
 
@@ -11,6 +12,7 @@ const UiCard = preload("res://objects/ui_card.tscn")
 
 const SCORE_GOAL = 20
 
+var turn = 0
 var player_lane_spaces = []
 var player_lane_cards = []
 var enemy_lane_spaces = []
@@ -81,7 +83,8 @@ func _ready():
 
 func begin_battle():
 	# Wait for scene transition
-	yield(ScnUiOverlay.find_node("Tween"), "tween_all_completed")
+	if ScnUiOverlay.find_node("Tween").is_active():
+		yield(ScnUiOverlay.find_node("Tween"), "tween_all_completed")
 	$AnimationPlayer.play("scene_slide_in")
 	ScnUiOverlay.show()
 	yield(ScnUiOverlay.animate_popup("battle_begin"), "completed")
@@ -97,9 +100,7 @@ func begin_battle():
 	# Shuffle the deck
 	$GameDeck.shuffle()
 	# Draw cards for player's initial hand
-	for i in range(3):
-		draw_card()
-		yield(get_tree().create_timer(0.2 / SettingsController.graphics_animation_timescale, false), "timeout")
+	yield(draw_card(3), "completed")
 	
 	enemy_choose_next_card()
 	
@@ -127,14 +128,26 @@ func generate_card(owner:int = 0):
 	return new_card
 
 
-func draw_card():
-	var new_card = $GameDeck.get_card()
-	if new_card == null:
-		return
-	new_card.connect("played", self, "_on_GameCard_played")
-	new_card.connect("scored", self, "_on_GameCard_scored")
-	new_card.global_position = $GameDeck.global_position
-	$GameHand.addCard(new_card)
+func draw_card(count = 1):
+	var new_cards = []
+	for i in range(count):
+		var new_card = $GameDeck.get_card()
+		if new_card == null:
+			break
+		new_card.global_position = $GameDeck.global_position
+		$GameHand.addCard(new_card)
+		new_cards.append(new_card)
+		yield(
+			get_tree().create_timer(
+				0.2 / SettingsController.graphics_animation_timescale,
+				false
+			),
+			"timeout"
+		)
+	for card in new_cards:
+		card.connect("played", self, "_on_GameCard_played")
+		card.connect("scored", self, "_on_GameCard_scored")
+	yield(get_tree(), "idle_frame")
 
 
 func make_cards_attack(lane):
@@ -243,74 +256,102 @@ func enemy_play_card(card_id: String):
 	card.perform_played()
 
 
+func perform_player_play():
+	$DebugGamePhase.text = "player play"
+	turn += 1
+	yield($GameHand.set_active(true), "completed")
+	draw_card()
+	$ButtonEndTurn.disabled = false
+
+
+func perform_player_attack():
+	$DebugGamePhase.text = "player attack"
+	$GameHand.active = false
+	$ButtonEndTurn.disabled = true
+	
+	yield(make_cards_attack(player_lane_cards), "completed")
+			
+	if player_lane_cards.count(null) != len(player_lane_cards):
+		yield(get_tree().create_timer(0.5, false), "timeout")
+	emit_signal("next_phase_triggered", 2)
+
+
+func perform_player_move():
+	$DebugGamePhase.text = "player move"
+	
+	yield(move_cards(player_lane_cards), "completed")
+	
+	if player_lane_cards.count(null) != len(player_lane_cards):
+		yield(get_tree().create_timer(0.5, false), "timeout")
+	if _scores[0] >= SCORE_GOAL:
+		emit_signal("player_won")
+	else:
+		emit_signal("next_phase_triggered", 3)
+
+
+func perform_enemy_play():
+	$DebugGamePhase.text = "opponent play"
+	
+	if _enemy_queued_card and enemy_lane_cards[0] == null:
+		_enemy_hand.erase(_enemy_queued_card)
+		var card = _enemy_queued_card
+		_enemy_queued_card = null
+		yield(enemy_play_card(card), "completed")
+		yield(get_tree().create_timer(0.5, false), "timeout")
+	
+	emit_signal("next_phase_triggered", 4)
+
+
+func perform_enemy_attack():
+	$DebugGamePhase.text = "opponent attack"
+	
+	yield(make_cards_attack(enemy_lane_cards), "completed")
+	
+	if enemy_lane_cards.count(null) != len(enemy_lane_cards):
+		yield(get_tree().create_timer(0.5, false), "timeout")
+	emit_signal("next_phase_triggered", 5)
+
+
+func perform_enemy_move():
+	$DebugGamePhase.text = "opponent move"
+	
+	yield(move_cards(enemy_lane_cards), "completed")
+	
+	if enemy_lane_cards.count(null) != len(enemy_lane_cards):
+		yield(get_tree().create_timer(0.5, false), "timeout")
+	if _scores[1] >= SCORE_GOAL:
+		emit_signal("player_lost")
+	else:
+		emit_signal("next_phase_triggered", 6)
+
+
+func perform_enemy_pick():
+	$DebugGamePhase.text = "opponent draw"
+	var card_id = _enemy_deck.pop_back()
+	if card_id:
+		_enemy_hand.append(card_id)
+		enemy_choose_next_card()
+	emit_signal("next_phase_triggered", 0)
+
+
 func _on_next_phase_triggered(phase: int):
 	_game_phase = phase
 
 	match _game_phase:
-		0:	# player play card
-			$DebugGamePhase.text = "player play"
-			yield($GameHand.set_active(true), "completed")
-			draw_card()
-			$ButtonEndTurn.disabled = false
-			
-		1:	# player attack
-			$DebugGamePhase.text = "player attack"
-			$GameHand.active = false
-			$ButtonEndTurn.disabled = true
-			
-			yield(make_cards_attack(player_lane_cards), "completed")
-			
-			if player_lane_cards.count(null) != len(player_lane_cards):
-				yield(get_tree().create_timer(0.5, false), "timeout")
-			emit_signal("next_phase_triggered", 2)
-		2:	# player move
-			$DebugGamePhase.text = "player move"
-			
-			yield(move_cards(player_lane_cards), "completed")
-			
-			if player_lane_cards.count(null) != len(player_lane_cards):
-				yield(get_tree().create_timer(0.5, false), "timeout")
-			if _scores[0] >= SCORE_GOAL:
-				emit_signal("player_won")
-			else:
-				emit_signal("next_phase_triggered", 3)
-		3:	# enemy play card
-			$DebugGamePhase.text = "opponent play"
-			
-			if _enemy_queued_card and enemy_lane_cards[0] == null:
-				_enemy_hand.erase(_enemy_queued_card)
-				var card = _enemy_queued_card
-				_enemy_queued_card = null
-				yield(enemy_play_card(card), "completed")
-				yield(get_tree().create_timer(0.5, false), "timeout")
-			
-			emit_signal("next_phase_triggered", 4)
-		4:	#enemy attack
-			$DebugGamePhase.text = "opponent attack"
-			
-			yield(make_cards_attack(enemy_lane_cards), "completed")
-			
-			if enemy_lane_cards.count(null) != len(enemy_lane_cards):
-				yield(get_tree().create_timer(0.5, false), "timeout")
-			emit_signal("next_phase_triggered", 5)
-		5:	# enemy move
-			$DebugGamePhase.text = "opponent move"
-			
-			yield(move_cards(enemy_lane_cards), "completed")
-			
-			if enemy_lane_cards.count(null) != len(enemy_lane_cards):
-				yield(get_tree().create_timer(0.5, false), "timeout")
-			if _scores[1] >= SCORE_GOAL:
-				emit_signal("player_lost")
-			else:
-				emit_signal("next_phase_triggered", 6)
-		6:	# enemy draw
-			$DebugGamePhase.text = "opponent draw"
-			var card_id = _enemy_deck.pop_back()
-			if card_id:
-				_enemy_hand.append(card_id)
-				enemy_choose_next_card()
-			emit_signal("next_phase_triggered", 0)
+		0:
+			perform_player_play()
+		1:
+			perform_player_attack()
+		2:
+			perform_player_move()
+		3:
+			perform_enemy_play()
+		4:
+			perform_enemy_attack()
+		5:
+			perform_enemy_move()
+		6:
+			perform_enemy_pick()
 
 
 func _on_GameDeck_clicked():

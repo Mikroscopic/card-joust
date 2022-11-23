@@ -103,16 +103,16 @@ custom_fonts/normal_font = SubResource( 1 )
 bbcode_enabled = true
 
 [node name="ButtonEndTurn" type="Button" parent="."]
-margin_left = 1700.0
-margin_top = 850.0
-margin_right = 1850.0
-margin_bottom = 1000.0
+margin_left = 1640.0
+margin_top = 450.0
+margin_right = 1892.0
+margin_bottom = 600.0
 theme = ExtResource( 6 )
 disabled = true
-text = "End"
+text = "Charge!"
 
 [node name="GameDeck" parent="." instance=ExtResource( 4 )]
-position = Vector2( 1512, 880 )
+position = Vector2( 1750, 880 )
 scale = Vector2( 0.8, 0.8 )
 
 [node name="BoardCards" type="Node2D" parent="."]
