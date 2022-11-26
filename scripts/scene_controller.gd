@@ -5,7 +5,7 @@ var _level_progress = 0
 
 
 func _ready():
-	pass
+	load_level_progress()
 
 func change_scene(path: String):
 	get_tree().change_scene(path)
@@ -47,4 +47,24 @@ func get_level_progress():
 
 
 func save_level_progress():
-	pass
+	var save_file = File.new()
+	var error = save_file.open("user://save.json", File.WRITE)
+	if error:
+		print("Unable to save save file.")
+		return
+	
+	var save_data = {
+		"level_progress": _level_progress,
+	}
+	save_file.store_line(to_json(save_data))
+
+
+func load_level_progress():
+	var save_file = File.new()
+	var error = save_file.open("user://save.json", File.READ)
+	if error:
+		print("Unable to load save file.")
+		return
+	
+	var save_data = parse_json(save_file.get_as_text())
+	_level_progress = int(save_data["level_progress"])
