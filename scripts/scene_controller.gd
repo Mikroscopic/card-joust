@@ -1,6 +1,9 @@
 extends Node
 
 
+var _level_progress = 0
+
+
 func _ready():
 	pass
 
@@ -32,3 +35,16 @@ func reload_scene_fade(time: float):
 	ScnUiOverlay.hide_popup()
 	yield(ScnUiOverlay.fade_out(time / 2), "completed")
 	ScnUiOverlay.hide()
+
+
+func set_level_completed(level):
+	_level_progress = _level_progress | (1 << level)
+	save_level_progress()
+
+
+func get_level_progress():
+	return _level_progress
+
+
+func save_level_progress():
+	pass

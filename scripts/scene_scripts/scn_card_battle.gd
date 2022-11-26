@@ -19,6 +19,7 @@ var player_lane_cards = []
 var enemy_lane_spaces = []
 var enemy_lane_cards = []
 
+var _level_index
 # 0	player play card
 # 1 player attack
 # 2 player move
@@ -41,6 +42,7 @@ var _enemy_queued_card
 
 
 func _init():
+	_level_index = 0
 	_enemy_name = "Placeholder"
 	_enemy_portrait = "portrait_henryii.png"
 	_enemy_deck = [
@@ -442,6 +444,7 @@ func _on_ScnCardBattle_player_lost():
 
 
 func _on_ScnCardBattle_player_won():
+	SceneController.set_level_completed(_level_index)
 	ScnUiOverlay.show()
 	ScnUiOverlay.show_popup("battle_won")
 

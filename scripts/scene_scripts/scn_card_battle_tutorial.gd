@@ -94,6 +94,7 @@ func enemy_choose_next_card():
 				2:
 					_enemy_queued_card = "MEDIEVAL_LORD"
 
+
 func perform_player_play():
 	$DebugGamePhase.text = "player play"
 	turn += 1
@@ -274,6 +275,7 @@ func _on_ScnCardBattle_player_lost():
 
 
 func _on_ScnCardBattle_player_won():
+	SceneController.set_level_completed(0)
 	ScnUiDialogue.active_box = 1
 	ScnUiDialogue.messages = [
 		"You have fought well.",

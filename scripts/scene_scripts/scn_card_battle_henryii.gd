@@ -2,6 +2,7 @@ extends ScnCardBattle
 
 
 func _init():
+	_level_index = 1
 	_enemy_name = "Henry II of France"
 	_enemy_portrait = "portrait_henryii.png"
 	_enemy_deck = [

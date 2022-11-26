@@ -10,7 +10,15 @@ func _on_BtnRetry_pressed():
 
 
 func _on_BtnNext_pressed():
-	SceneController.change_scene_fade("res://scenes/scn_ui_main_menu.tscn", 1.0)
+	var next_scene = "res://scenes/scn_ui_main_menu.tscn"
+	var progress = SceneController.get_level_progress()
+	if progress & (1 << 0) != 0:
+		next_scene = "res://scenes/scn_card_battle_henryii.tscn"
+	if progress & (1 << 1) != 0:
+		next_scene = "res://scenes/scn_card_battle_midas.tscn"
+	if progress & (1 << 2) != 0:
+		next_scene = "res://scenes/scn_ui_main_menu.tscn"
+	SceneController.change_scene_fade(next_scene, 1.0)
 
 
 func show_popup(popup):

@@ -1,9 +1,16 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/scene_scripts/scn_ui_main_menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/themes/fnt_title.tres" type="DynamicFont" id=2]
 [ext_resource path="res://assets/themes/theme_hud_main.tres" type="Theme" id=3]
 [ext_resource path="res://scenes/scn_ui_settings_menu.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/themes/fnt_hud_02.tres" type="DynamicFont" id=5]
+
+[sub_resource type="InputEventAction" id=1]
+action = "ui_cancel"
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
 
 [node name="ScnUiMainMenu" type="Control"]
 anchor_right = 1.0
@@ -42,6 +49,13 @@ margin_right = 260.0
 margin_bottom = 85.0
 text = "Start"
 
+[node name="BtnLvlSelect" type="Button" parent="MainMenu/VBoxContainer/CenterContainer/VBoxContainer"]
+visible = false
+margin_top = 89.0
+margin_right = 361.0
+margin_bottom = 174.0
+text = "Level Select"
+
 [node name="BtnSettings" type="Button" parent="MainMenu/VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 89.0
 margin_right = 260.0
@@ -54,10 +68,76 @@ margin_right = 260.0
 margin_bottom = 263.0
 text = "Quit"
 
+[node name="LevelSelectMenu" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 3 )
+
+[node name="CenterContainer" type="CenterContainer" parent="LevelSelectMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelSelectMenu/CenterContainer"]
+margin_left = 799.0
+margin_top = 374.0
+margin_right = 1120.0
+margin_bottom = 706.0
+
+[node name="Label" type="Label" parent="LevelSelectMenu/CenterContainer/VBoxContainer"]
+margin_right = 321.0
+margin_bottom = 65.0
+custom_fonts/font = ExtResource( 5 )
+text = "Level Select"
+
+[node name="CenterContainer" type="CenterContainer" parent="LevelSelectMenu/CenterContainer/VBoxContainer"]
+margin_top = 69.0
+margin_right = 321.0
+margin_bottom = 332.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer"]
+margin_left = 28.0
+margin_right = 292.0
+margin_bottom = 263.0
+
+[node name="BtnLvl0" type="Button" parent="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer/VBoxContainer"]
+margin_right = 264.0
+margin_bottom = 85.0
+text = "Tutorial"
+
+[node name="BtnLvl1" type="Button" parent="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer/VBoxContainer"]
+margin_top = 89.0
+margin_right = 264.0
+margin_bottom = 174.0
+disabled = true
+text = "Level 1"
+
+[node name="BtnLvl2" type="Button" parent="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer/VBoxContainer"]
+margin_top = 178.0
+margin_right = 264.0
+margin_bottom = 263.0
+disabled = true
+text = "Level 2"
+
+[node name="BtnLvlSelectBack" type="Button" parent="LevelSelectMenu"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = -121.0
+margin_right = 221.0
+margin_bottom = -36.0
+shortcut = SubResource( 2 )
+text = "Back"
+
 [node name="ScnUiSettingsMenu" parent="." instance=ExtResource( 4 )]
 visible = false
 
 [connection signal="pressed" from="MainMenu/VBoxContainer/CenterContainer/VBoxContainer/BtnNewGame" to="." method="_on_BtnNewGame_pressed"]
+[connection signal="pressed" from="MainMenu/VBoxContainer/CenterContainer/VBoxContainer/BtnLvlSelect" to="." method="_on_BtnLvlSelect_pressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/CenterContainer/VBoxContainer/BtnSettings" to="." method="_on_BtnSettings_pressed"]
 [connection signal="pressed" from="MainMenu/VBoxContainer/CenterContainer/VBoxContainer/BtnQuit" to="." method="_on_BtnQuit_pressed"]
+[connection signal="pressed" from="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer/VBoxContainer/BtnLvl0" to="." method="_on_BtnLvl0_pressed"]
+[connection signal="pressed" from="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer/VBoxContainer/BtnLvl1" to="." method="_on_BtnLvl1_pressed"]
+[connection signal="pressed" from="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer/VBoxContainer/BtnLvl2" to="." method="_on_BtnLvl2_pressed"]
+[connection signal="pressed" from="LevelSelectMenu/BtnLvlSelectBack" to="." method="_on_BtnLvlSelectBack_pressed"]
 [connection signal="settings_saved" from="ScnUiSettingsMenu" to="." method="_on_ScnUiSettingsMenu_settings_saved"]
