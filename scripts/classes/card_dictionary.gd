@@ -81,6 +81,17 @@ const cards = {
 		"value": 2,
 		"health": 1,
 	},
+	"GREEK_BOSS_MIDAS_HAND": {
+		"name": "HAND of MIDAS",
+		"description": "Turns cards into gold statues. A gold statue cannot " \
+			+ "attack, and can only move if a card in the space behind it " \
+			+ "can move.",
+		"image_bg": "",
+		"image_portrait": "",
+		"power": 1,
+		"value": 4,
+		"health": 2,
+	},
 }
 
 

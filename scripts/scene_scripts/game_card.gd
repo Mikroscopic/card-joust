@@ -18,6 +18,7 @@ var card_description: String
 var power: int
 var health: int
 var value: int
+var status_flags = 0
 
 # Reference to the battle scene parent node
 var _battle_scene
@@ -192,8 +193,8 @@ func perform_attack():
 					if v > 0:
 						_enemy_lane[t].value = v - 1
 						value += 1
-				_:
-					pass
+				"GREEK_BOSS_MIDAS_HAND":
+					_enemy_lane[t].apply_status("STATUS_GOLD_STATUE")
 			
 			var opposing_card_killed = _enemy_lane[t].take_damage(self, power)
 			$AnimationPlayer.play(
@@ -220,6 +221,23 @@ func perform_pre_travel():
 
 
 func perform_travel():
+	# Check STATUS_GOLD_STATUE
+	if (status_flags & (1 << 0) != 0):
+		var can_move = false
+		var i = _lane_space - 1
+		while i >= 0:
+			if !_ally_lane[i]:
+				break
+			if _ally_lane[i].status_flags & (1 << 0) == 0:
+				can_move = true
+				break
+			i -= 1
+		
+		if !can_move:
+			yield(get_tree(), "idle_frame")
+			return
+	
+	
 	# Find the new position to move to
 	var new_space
 	var new_position
@@ -287,6 +305,17 @@ func take_damage(attacker, dmg):
 		_ally_lane[_lane_space] = null
 		return true
 	return false
+
+
+func apply_status(status: String):
+	match status:
+		"STATUS_GOLD_STATUE":
+			if (status_flags & (1 << 0) != 0):
+				return
+			status_flags = status_flags | (1 << 0)
+			power = 0
+			value += 2
+			$CardVisual.modulate = Color(1.0, 0.8, 0.4)
 
 
 func _on_board_state_changed():
