@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/themes/HTOWERT.TTF" type="DynamicFontData" id=1]
+[ext_resource path="res://scenes/scn_card_battle.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/scene_scripts/scn_card_battle_henryii.gd" type="Script" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+resource_local_to_scene = true
+size = 64
+outline_size = 1
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+resource_local_to_scene = true
+size = 128
+outline_size = 2
+font_data = ExtResource( 1 )
+
+[node name="ScnCardBattle" instance=ExtResource( 2 )]
+script = ExtResource( 3 )
+
+[node name="LabelNextCard" parent="." index="7"]
+custom_fonts/font = SubResource( 1 )
+
+[node name="Name" parent="Portrait" index="3"]
+custom_fonts/font = SubResource( 2 )

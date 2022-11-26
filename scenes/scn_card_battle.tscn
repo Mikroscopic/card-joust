@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://scripts/scene_scripts/scn_card_battle.gd" type="Script" id=1]
 [ext_resource path="res://objects/game_board.tscn" type="PackedScene" id=2]
@@ -10,6 +10,9 @@
 [ext_resource path="res://assets/themes/HTOWERT.TTF" type="DynamicFontData" id=8]
 [ext_resource path="res://assets/themes/fnt_hud_02.tres" type="DynamicFont" id=9]
 [ext_resource path="res://assets/themes/theme_hud_hints.tres" type="Theme" id=10]
+[ext_resource path="res://assets/sprites/portraits/portrait_back.png" type="Texture" id=11]
+[ext_resource path="res://assets/sprites/portraits/portrait_frame.png" type="Texture" id=12]
+[ext_resource path="res://assets/themes/fnt_title.tres" type="DynamicFont" id=13]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -28,6 +31,111 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Vector2( 0, -1080 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Portrait:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 950, -630 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Portrait:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( -2 ),
+"update": 0,
+"values": [ Vector2( 0, 1080 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Portrait/Name:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ true ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "portrait_introduce"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Portrait:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( -2, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 1.5, 1.5 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "portrait_to_corner"
+length = 0.25
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Portrait:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 2, 1 ),
+"update": 0,
+"values": [ Vector2( 950, 450 ), Vector2( 1770, 220 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Portrait:scale")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 2, 1 ),
+"update": 0,
+"values": [ Vector2( 1.5, 1.5 ), Vector2( 0.6, 0.6 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Portrait/Name:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -55,6 +163,18 @@ tracks/1/keys = {
 "transitions": PoolRealArray( -2, 1 ),
 "update": 0,
 "values": [ Vector2( 0, -1080 ), Vector2( 0, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Portrait:position")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( -2, 1 ),
+"update": 0,
+"values": [ Vector2( 950, -630 ), Vector2( 950, 450 ) ]
 }
 
 [node name="ScnCardBattle" type="Node2D"]
@@ -118,18 +238,46 @@ scale = Vector2( 0.8, 0.8 )
 [node name="BoardCards" type="Node2D" parent="."]
 
 [node name="LabelNextCard" type="Label" parent="."]
-margin_left = 1400.0
+margin_left = 1360.0
 margin_top = 10.0
-margin_right = 1700.0
+margin_right = 1660.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 300, 70 )
 theme = ExtResource( 6 )
 custom_fonts/font = ExtResource( 9 )
-text = "Next card:"
+text = "Next:"
 align = 1
 
 [node name="Position2D" type="Position2D" parent="LabelNextCard"]
 position = Vector2( 150, 200 )
+
+[node name="Portrait" type="Node2D" parent="."]
+position = Vector2( 950, -630 )
+scale = Vector2( 1e-05, 1e-05 )
+
+[node name="Back" type="Sprite" parent="Portrait"]
+modulate = Color( 1, 0.9, 0.7, 1 )
+texture = ExtResource( 11 )
+
+[node name="Head" type="Sprite" parent="Portrait"]
+
+[node name="Frame" type="Sprite" parent="Portrait"]
+texture = ExtResource( 12 )
+
+[node name="Name" type="Label" parent="Portrait"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -500.0
+margin_top = 270.0
+margin_right = 500.0
+margin_bottom = 335.0
+rect_min_size = Vector2( 2000, 0 )
+rect_scale = Vector2( 0.5, 0.5 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 13 )
+align = 1
 
 [node name="GameHand" parent="." instance=ExtResource( 3 )]
 position = Vector2( 200, 880 )
@@ -153,6 +301,8 @@ text = "gamephase"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 3 )
+anims/portrait_introduce = SubResource( 4 )
+anims/portrait_to_corner = SubResource( 5 )
 anims/scene_slide_in = SubResource( 2 )
 
 [connection signal="next_phase_triggered" from="." to="." method="_on_next_phase_triggered"]

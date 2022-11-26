@@ -152,6 +152,9 @@ func attack():
 	yield(perform_attack(), "completed")
 	yield(perform_post_attack(), "completed")
 	update_stats()
+	if health == 0:
+		queue_free()
+		_ally_lane[_lane_space] = null
 
 
 func travel():
@@ -182,6 +185,7 @@ func perform_attack():
 				SettingsController.graphics_animation_timescale
 			)
 			yield($AnimationPlayer, "animation_finished")
+			
 			match card_id:
 				"MEDIEVAL_THIEF":
 					var v = _enemy_lane[t].value
@@ -190,6 +194,7 @@ func perform_attack():
 						value += 1
 				_:
 					pass
+			
 			var opposing_card_killed = _enemy_lane[t].take_damage(self, power)
 			$AnimationPlayer.play(
 				"attack_end",
@@ -198,6 +203,11 @@ func perform_attack():
 			)
 			yield($AnimationPlayer, "animation_finished")
 			_target_position = global_position
+			
+			match card_id:
+				"MEDIEVAL_BOSS_LANCE":
+					health = 0
+					break
 	yield(get_tree(), "idle_frame")
 
 
@@ -242,13 +252,25 @@ func perform_travel():
 
 
 func perform_post_travel():
+	match card_id:
+		"MEDIEVAL_BOSS_HEART":
+			health += 1
+			power = health
+			update_stats()
 	yield(get_tree(), "idle_frame")
 
 
 func take_damage(attacker, dmg):
 	match card_id:
-		"":
-			pass
+		"MEDIEVAL_BOSS_HEART":
+			health -= dmg
+			health = max(0, health)
+			power = health
+			$AnimationPlayer.play(
+				"shake",
+				-1,
+				SettingsController.graphics_animation_timescale
+			)
 		_:
 			health -= dmg
 			health = max(0, health)
@@ -265,3 +287,14 @@ func take_damage(attacker, dmg):
 		_ally_lane[_lane_space] = null
 		return true
 	return false
+
+
+func _on_board_state_changed():
+	var opposite_space = _enemy_lane.size() - _lane_space - 1
+	match card_id:
+		"MEDIEVAL_BOSS_EYE":
+			if _enemy_lane[opposite_space]:
+				power = _enemy_lane[opposite_space].power
+			else:
+				power = 0
+			update_stats()

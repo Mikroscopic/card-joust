@@ -3,6 +3,7 @@ extends Node2D
 
 
 signal next_phase_triggered(phase)
+signal board_state_changed
 signal player_won
 signal player_lost
 
@@ -28,6 +29,8 @@ var _game_phase = 0
 
 var _scores = [0, 0]
 
+var _enemy_name
+var _enemy_portrait
 # Opponent deck, hand, and next up card
 var _enemy_deck = []
 var _enemy_hand = []
@@ -38,6 +41,8 @@ var _enemy_queued_card
 
 
 func _init():
+	_enemy_name = "Placeholder"
+	_enemy_portrait = "portrait_henryii.png"
 	_enemy_deck = [
 		"MEDIEVAL_PEASANT",
 		"MEDIEVAL_PEASANT",
@@ -75,6 +80,14 @@ func _ready():
 		enemy_lane_cards.append(null)
 	enemy_lane_spaces.append($GameBoard/EnemyLane/EndSpace)
 	
+	# Enemy name and portrait
+	$Portrait/Name.text = _enemy_name
+	var img_portrait = Image.new()
+	img_portrait.load("res://assets/sprites/portraits/" + _enemy_portrait)
+	var tex_portrait = ImageTexture.new()
+	tex_portrait.create_from_image(img_portrait)
+	$Portrait/Head.texture = tex_portrait
+	
 	begin_battle()
 
 
@@ -85,7 +98,11 @@ func begin_battle():
 	# Wait for scene transition
 	if ScnUiOverlay.find_node("Tween").is_active():
 		yield(ScnUiOverlay.find_node("Tween"), "tween_all_completed")
+	$AnimationPlayer.play("portrait_introduce")
+	yield($AnimationPlayer, "animation_finished")
 	$AnimationPlayer.play("scene_slide_in")
+	yield($AnimationPlayer, "animation_finished")
+	$AnimationPlayer.play("portrait_to_corner")
 	ScnUiOverlay.show()
 	yield(ScnUiOverlay.animate_popup("battle_begin"), "completed")
 	ScnUiOverlay.hide_popup()
@@ -103,6 +120,12 @@ func begin_battle():
 	yield(draw_card(3), "completed")
 	
 	enemy_choose_next_card()
+	# Update next card visual
+	if _enemy_queued_card:
+		var card_preview = UiCard.instance().init(_enemy_queued_card)
+		card_preview.scale = Vector2(0.6, 0.6)
+		$LabelNextCard/Position2D.add_child(card_preview)
+	turn += 1
 	
 	#emit_signal("next_phase_triggered", 0)
 	$DebugGamePhase.text = "player play"
@@ -163,6 +186,7 @@ func move_cards(lane):
 	while i >= 0:
 		if lane[i]:
 			yield(lane[i].travel(), "completed")
+			emit_signal("board_state_changed")
 		i -= 1
 	yield(get_tree(), "idle_frame")
 
@@ -173,6 +197,16 @@ func update_score(team, value):
 
 
 func enemy_choose_next_card():
+	enemy_smart_card_choose()
+
+
+func enemy_smart_card_choose():
+	var card_id = _enemy_deck.pop_back()
+	if card_id:
+		_enemy_hand.append(card_id)
+	else:
+		return
+	
 	var best_fitness = -1
 	var best_card
 	
@@ -193,28 +227,22 @@ func enemy_choose_next_card():
 		preferred_power = pc2.health
 		power_bias = (pc2.value) / 2.0
 	
-	for card_id in _enemy_hand:
+	for c_id in _enemy_hand:
 		var c_fitness = enemy_get_card_candidate_fitness(
-			card_id,
+			c_id,
 			preferred_power,
 			preferred_health,
 			power_bias
 		)
 		if c_fitness > best_fitness:
 			best_fitness = c_fitness
-			best_card = card_id
+			best_card = c_id
 	
 	# Randomly pass if card fitness is not good enough
 	if best_fitness < 3 and rand_range(best_fitness, 4) < 3:
 		_enemy_queued_card = null
 	else:
 		_enemy_queued_card = best_card
-	
-	# Update next card visual
-	if _enemy_queued_card:
-		var card_preview = UiCard.instance().init(_enemy_queued_card)
-		card_preview.scale = Vector2(0.6, 0.6)
-		$LabelNextCard/Position2D.add_child(card_preview)
 
 
 func enemy_get_card_candidate_fitness(
@@ -247,13 +275,29 @@ func enemy_play_card(card_id: String):
 	
 	var card = GameCard.instance().init(card_id)
 	card.connect("scored", self, "_on_GameCard_scored")
+	self.connect("board_state_changed", card, "_on_board_state_changed")
 	var enemy_play_pos = enemy_lane_spaces[0].find_node("CenterPoint").global_position
 	enemy_lane_cards[0] = card
 	$BoardCards.add_child(card)
 	card.scale = Vector2(0.8, 0.8)
 	card.global_position = enemy_play_pos + Vector2(0, -400)
 	card.slide_to_position(enemy_play_pos, 0.25)
+	emit_signal("board_state_changed")
 	card.perform_played()
+
+
+func check_bankruptcy():
+	if ($GameDeck.cards_size() == 0
+		and $GameHand/Cards.get_child_count() == 0
+		and player_lane_cards.count(null) == len(player_lane_cards)
+	):
+		ScnUiDialogue.active_box = 1
+		ScnUiDialogue.messages = [
+			"It seems you are out of cards.",
+			"Unfortunately, victory is impossible. You must try again.",
+		]
+		yield(ScnUiDialogue, "messages_finished")
+		emit_signal("player_lost")
 
 
 func perform_player_play():
@@ -327,10 +371,15 @@ func perform_enemy_move():
 
 func perform_enemy_pick():
 	$DebugGamePhase.text = "opponent draw"
-	var card_id = _enemy_deck.pop_back()
-	if card_id:
-		_enemy_hand.append(card_id)
-		enemy_choose_next_card()
+	
+	enemy_choose_next_card()
+	
+	# Update next card visual
+	if _enemy_queued_card:
+		var card_preview = UiCard.instance().init(_enemy_queued_card)
+		card_preview.scale = Vector2(0.6, 0.6)
+		$LabelNextCard/Position2D.add_child(card_preview)
+	
 	emit_signal("next_phase_triggered", 0)
 
 
@@ -339,6 +388,7 @@ func _on_next_phase_triggered(phase: int):
 
 	match _game_phase:
 		0:
+			check_bankruptcy()
 			perform_player_play()
 		1:
 			perform_player_attack()
@@ -370,6 +420,7 @@ func _on_GameCard_played(card):
 		return
 
 	card.disconnect("played", self, "_on_GameCard_played")
+	self.connect("board_state_changed", card, "_on_board_state_changed")
 	player_lane_cards[0] = card
 	var card_pos = card.global_position
 	$GameHand.removeCard(card)
@@ -377,6 +428,7 @@ func _on_GameCard_played(card):
 	card.scale = Vector2(0.8, 0.8)
 	card.global_position = card_pos
 	card.slide_to_position(player_lane_spaces[0].find_node("CenterPoint").global_position, 0.15, true)
+	emit_signal("board_state_changed")
 	card.perform_played()
 
 

@@ -52,6 +52,35 @@ const cards = {
 		"value": 2,
 		"health": 2,
 	},
+	"MEDIEVAL_BOSS_LANCE": {
+		"name": "BRITTLE LANCE",
+		"description": "Dies after attacking for the first time.",
+		"image_bg": "",
+		"image_portrait": "",
+		"power": 3,
+		"value": 0,
+		"health": 1,
+	},
+	"MEDIEVAL_BOSS_EYE": {
+		"name": "SPLINTERED EYE",
+		"description": "This card's attack power is equal to that of the " \
+			+ "card in the opposing space.",
+		"image_bg": "",
+		"image_portrait": "",
+		"power": 0,
+		"value": 2,
+		"health": 2,
+	},
+	"MEDIEVAL_BOSS_HEART": {
+		"name": "PIERCED HEART",
+		"description": "This card's attack power is equal to its health. " \
+			+ "Gains 1 health at the end of its owner's turn.",
+		"image_bg": "",
+		"image_portrait": "",
+		"power": 1,
+		"value": 2,
+		"health": 1,
+	},
 }
 
 

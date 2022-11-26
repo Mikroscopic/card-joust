@@ -76,6 +76,10 @@ func get_card():
 	return GameCardPlayer.instance().init(card_id)
 
 
+func cards_size():
+	return _cards.size()
+
+
 func select():
 	_is_selected = true
 

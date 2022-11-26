@@ -81,6 +81,19 @@ func play_tutorial():
 	# Normal game loop begins from here
 
 
+func enemy_choose_next_card():
+	match turn:
+		0:
+			pass
+		_:
+			match turn % 3:
+				0:
+					_enemy_queued_card = null
+				1:
+					_enemy_queued_card = "MEDIEVAL_PEASANT"
+				2:
+					_enemy_queued_card = "MEDIEVAL_LORD"
+
 func perform_player_play():
 	$DebugGamePhase.text = "player play"
 	turn += 1
@@ -249,28 +262,6 @@ func perform_enemy_move():
 		emit_signal("next_phase_triggered", 6)
 
 
-func perform_enemy_pick():
-	$DebugGamePhase.text = "opponent draw"
-	
-	match turn:
-		0:
-			pass
-		_:
-			match turn % 3:
-				0:
-					_enemy_queued_card = null
-				1:
-					_enemy_queued_card = "MEDIEVAL_PEASANT"
-				2:
-					_enemy_queued_card = "MEDIEVAL_LORD"
-			if _enemy_queued_card:
-				var card_preview = UiCard.instance().init(_enemy_queued_card)
-				card_preview.scale = Vector2(0.6, 0.6)
-				$LabelNextCard/Position2D.add_child(card_preview)
-	
-	emit_signal("next_phase_triggered", 0)
-
-
 func _on_ScnCardBattle_player_lost():
 	ScnUiDialogue.active_box = 1
 	ScnUiDialogue.messages = [
@@ -289,4 +280,4 @@ func _on_ScnCardBattle_player_won():
 		"It is time to battle a real enemy. Good luck.",
 	]
 	yield(ScnUiDialogue, "messages_finished")
-	SceneController.change_scene_fade("res://scenes/scn_card_battle.tscn", 1.0)
+	SceneController.change_scene_fade("res://scenes/scn_card_battle_henryii.tscn", 1.0)
