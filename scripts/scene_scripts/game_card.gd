@@ -56,6 +56,9 @@ func _ready():
 	else:
 		_ally_lane = _battle_scene.enemy_lane_cards
 		_enemy_lane = _battle_scene.player_lane_cards
+	if card_name.length() > 12:
+		var name_scale = min(1.0, 12.0 / card_name.length())
+		find_node("Name").rect_scale = Vector2(name_scale, name_scale)
 
 
 func init (id: String):

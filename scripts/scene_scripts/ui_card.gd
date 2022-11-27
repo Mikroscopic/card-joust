@@ -32,6 +32,9 @@ func _ready():
 		else:
 			n.set_theme(THEME_STATS)
 	find_node("Name").text = card_name
+	if card_name.length() > 12:
+		var name_scale = min(1.0, 12.0 / card_name.length())
+		find_node("Name").rect_scale = Vector2(name_scale, name_scale)
 
 
 func init(id: String):

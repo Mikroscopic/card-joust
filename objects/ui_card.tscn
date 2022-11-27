@@ -23,10 +23,12 @@ texture = ExtResource( 3 )
 [node name="Name" type="Label" parent="Background"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -512.0
+margin_left = -768.0
 margin_top = 322.0
+margin_right = 256.0
 margin_bottom = 422.0
-rect_min_size = Vector2( 512, 100 )
+rect_min_size = Vector2( 1024, 100 )
+rect_pivot_offset = Vector2( 512, 30 )
 theme = ExtResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 align = 1
