@@ -15,7 +15,9 @@ func addCard(card):
 	card.global_position = card_pos
 	_cards.append(card)
 	_card_positions.append(Vector2(0, 0))
+	card.play_sound("deal_a")
 	yield(calc_card_positions(), "completed")
+	card.play_sound("deal_b")
 	card.is_in_hand = true
 
 func removeCard(card):

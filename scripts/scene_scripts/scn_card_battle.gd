@@ -194,8 +194,15 @@ func move_cards(lane):
 
 
 func update_score(team, value):
-	_scores[team] += value
-	[$PlayerScore, $EnemyScore][team].text = str(_scores[team])
+	var i = value
+	while i != 0:
+		_scores[team] += 1 if value > 0 else -1
+		var score_label = [$PlayerScore, $EnemyScore][team]
+		score_label.text = str(_scores[team])
+		score_label.find_node("SfxPing").play()
+		score_label.find_node("SfxPing").pitch_scale = _scores[team] / 20.0 + 0.5
+		yield(get_tree().create_timer(0.1, false), "timeout")
+		i -= 1 if value > 0 else -1
 
 
 func enemy_choose_next_card():
@@ -283,7 +290,9 @@ func enemy_play_card(card_id: String):
 	$BoardCards.add_child(card)
 	card.scale = Vector2(0.8, 0.8)
 	card.global_position = enemy_play_pos + Vector2(0, -400)
-	card.slide_to_position(enemy_play_pos, 0.25)
+	card.play_sound("deal_a")
+	yield(card.slide_to_position(enemy_play_pos, 0.25), "completed")
+	card.play_sound("deal_b")
 	emit_signal("board_state_changed")
 	card.perform_played()
 
@@ -393,6 +402,7 @@ func _on_next_phase_triggered(phase: int):
 			check_bankruptcy()
 			perform_player_play()
 		1:
+			$SfxBattleHorn.play()
 			perform_player_attack()
 		2:
 			perform_player_move()
@@ -411,6 +421,7 @@ func _on_GameDeck_clicked():
 		return
 	if _scores[0] == 0:
 		return
+	$SfxBuyCard.play()
 	update_score(0, -1)
 	draw_card()
 
@@ -429,7 +440,16 @@ func _on_GameCard_played(card):
 	$BoardCards.add_child(card)
 	card.scale = Vector2(0.8, 0.8)
 	card.global_position = card_pos
-	card.slide_to_position(player_lane_spaces[0].find_node("CenterPoint").global_position, 0.15, true)
+	card.play_sound("deal_a")
+	yield(
+		card.slide_to_position(
+			player_lane_spaces[0].find_node("CenterPoint").global_position,
+			0.15,
+			true
+		),
+		"completed"
+	)
+	card.play_sound("deal_b")
 	emit_signal("board_state_changed")
 	card.perform_played()
 

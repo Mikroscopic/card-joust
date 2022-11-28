@@ -10,6 +10,11 @@ const THEME_STATS = preload("res://assets/themes/theme_cd_stats.tres")
 const THEME_STATS_DIGITS = preload("res://assets/themes/theme_cd_stats_digits.tres")
 
 export var distance_to_target: float setget set_distance_to_target
+export var snd_deal_a: AudioStream
+export var snd_deal_b: AudioStream
+export var snd_attack: AudioStream
+export (Array, AudioStream) var snd_move
+export var snd_gold: AudioStream
 
 # Card stats
 var card_id: String
@@ -199,6 +204,7 @@ func perform_attack():
 				"GREEK_BOSS_MIDAS_HAND":
 					_enemy_lane[t].apply_status("STATUS_GOLD_STATUE")
 			
+			play_sound("attack")
 			var opposing_card_killed = _enemy_lane[t].take_damage(self, power)
 			$AnimationPlayer.play(
 				"attack_end",
@@ -259,6 +265,7 @@ func perform_travel():
 		new_position = _battle_scene.enemy_lane_spaces[_lane_space + 1].find_node("CenterPoint").global_position
 	
 	# Move to new position
+	play_sound("move")
 	yield(slide_to_position(new_position, 0.2), "completed")
 	_ally_lane[_lane_space] = null
 	_lane_space = new_space
@@ -319,6 +326,7 @@ func apply_status(status: String):
 			power = 0
 			value += 2
 			$CardVisual.modulate = Color(1.0, 0.8, 0.4)
+			play_sound("gold")
 
 
 func _on_board_state_changed():
@@ -330,3 +338,18 @@ func _on_board_state_changed():
 			else:
 				power = 0
 			update_stats()
+
+
+func play_sound(sound):
+	match sound:
+		"deal_a":
+			$Sfx.stream = snd_deal_a
+		"deal_b":
+			$Sfx.stream = snd_deal_b
+		"attack":
+			$Sfx.stream = snd_attack
+		"move":
+			$Sfx.stream = snd_move[int(rand_range(0.0, snd_move.size()))]
+		"gold":
+			$Sfx.stream = snd_gold
+	$Sfx.play()

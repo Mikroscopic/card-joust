@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://scripts/scene_scripts/scn_card_battle.gd" type="Script" id=1]
 [ext_resource path="res://objects/game_board.tscn" type="PackedScene" id=2]
@@ -13,6 +13,9 @@
 [ext_resource path="res://assets/sprites/portraits/portrait_back.png" type="Texture" id=11]
 [ext_resource path="res://assets/sprites/portraits/portrait_frame.png" type="Texture" id=12]
 [ext_resource path="res://assets/themes/fnt_title.tres" type="DynamicFont" id=13]
+[ext_resource path="res://assets/sounds/battle_horn.wav" type="AudioStream" id=14]
+[ext_resource path="res://assets/sounds/ping.wav" type="AudioStream" id=15]
+[ext_resource path="res://assets/sounds/coin_drop.wav" type="AudioStream" id=16]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -196,6 +199,10 @@ text = "0"
 align = 1
 valign = 1
 
+[node name="SfxPing" type="AudioStreamPlayer2D" parent="PlayerScore"]
+position = Vector2( 100, 50 )
+stream = ExtResource( 15 )
+
 [node name="EnemyScore" type="Label" parent="."]
 margin_left = 290.0
 margin_top = 141.0
@@ -206,6 +213,10 @@ theme = ExtResource( 7 )
 text = "0"
 align = 1
 valign = 1
+
+[node name="SfxPing" type="AudioStreamPlayer2D" parent="EnemyScore"]
+position = Vector2( 100, 50 )
+stream = ExtResource( 15 )
 
 [node name="HintBox" type="PanelContainer" parent="."]
 margin_left = 30.0
@@ -304,6 +315,14 @@ anims/RESET = SubResource( 3 )
 anims/portrait_introduce = SubResource( 4 )
 anims/portrait_to_corner = SubResource( 5 )
 anims/scene_slide_in = SubResource( 2 )
+
+[node name="SfxBattleHorn" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 14 )
+volume_db = -20.0
+
+[node name="SfxBuyCard" type="AudioStreamPlayer2D" parent="."]
+position = Vector2( 1700, 870 )
+stream = ExtResource( 16 )
 
 [connection signal="next_phase_triggered" from="." to="." method="_on_next_phase_triggered"]
 [connection signal="player_lost" from="." to="." method="_on_ScnCardBattle_player_lost"]

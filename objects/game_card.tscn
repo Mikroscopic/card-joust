@@ -1,8 +1,15 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scripts/scene_scripts/game_card.gd" type="Script" id=1]
 [ext_resource path="res://assets/themes/theme_cd_stats.tres" type="Theme" id=2]
 [ext_resource path="res://assets/sprites/cards/cd_base.png" type="Texture" id=3]
+[ext_resource path="res://assets/sounds/attack.wav" type="AudioStream" id=4]
+[ext_resource path="res://assets/sounds/card_slide01.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/sounds/card_slide02.wav" type="AudioStream" id=6]
+[ext_resource path="res://assets/sounds/card_slide03.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/sounds/card_deal.wav" type="AudioStream" id=8]
+[ext_resource path="res://assets/sounds/card_snap.wav" type="AudioStream" id=9]
+[ext_resource path="res://assets/sounds/magic.wav" type="AudioStream" id=10]
 
 [sub_resource type="Animation" id=4]
 resource_name = "attack_end"
@@ -60,6 +67,11 @@ extents = Vector2( 128, 192 )
 
 [node name="GameCard" type="KinematicBody2D" groups=["cards"]]
 script = ExtResource( 1 )
+snd_deal_a = ExtResource( 8 )
+snd_deal_b = ExtResource( 9 )
+snd_attack = ExtResource( 4 )
+snd_move = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ]
+snd_gold = ExtResource( 10 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/attack_end = SubResource( 4 )
@@ -127,3 +139,6 @@ valign = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
+
+[node name="Sfx" type="AudioStreamPlayer2D" parent="."]
+volume_db = -1.0
