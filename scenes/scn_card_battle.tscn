@@ -238,6 +238,7 @@ margin_left = 1640.0
 margin_top = 450.0
 margin_right = 1892.0
 margin_bottom = 600.0
+mouse_default_cursor_shape = 2
 theme = ExtResource( 6 )
 disabled = true
 text = "Charge!"

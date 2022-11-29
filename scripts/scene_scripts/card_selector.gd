@@ -20,6 +20,7 @@ func _process(delta):
 					_selected.deselect()
 				_selected = null
 				emit_signal("none_selected")
+				Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 		1:
 			if overlaps[0].is_in_group("cards"):
 				if _selected != overlaps[0]:
@@ -29,12 +30,14 @@ func _process(delta):
 					overlaps[0].select()
 					_selected = overlaps[0]
 					emit_signal("card_selected", _selected)
+					Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 			else:
 				if _selected:
 					if is_instance_valid(_selected):
 						_selected.deselect()
 					_selected = null
 					emit_signal("none_selected")
+					Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 		_:
 			var top_index = -1
 			var top_item = null
@@ -50,8 +53,10 @@ func _process(delta):
 					overlaps[0].select()
 					_selected = overlaps[0]
 					emit_signal("card_selected", _selected)
+					Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 			elif _selected:
 				if is_instance_valid(_selected):
 					_selected.deselect()
 				_selected = null
 				emit_signal("none_selected")
+				Input.set_default_cursor_shape(Input.CURSOR_ARROW)

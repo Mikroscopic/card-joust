@@ -67,12 +67,14 @@ alignment = 1
 [node name="BtnMenu" type="Button" parent="CenterContainer/PopupBattleLost/VBoxContainer/HBoxContainer"]
 margin_right = 362.0
 margin_bottom = 85.0
+mouse_default_cursor_shape = 2
 text = "Main Menu"
 
 [node name="BtnRetry" type="Button" parent="CenterContainer/PopupBattleLost/VBoxContainer/HBoxContainer"]
 margin_left = 366.0
 margin_right = 690.0
 margin_bottom = 85.0
+mouse_default_cursor_shape = 2
 text = "Try Again"
 
 [node name="PopupBattleWon" type="PanelContainer" parent="CenterContainer"]
@@ -103,12 +105,14 @@ alignment = 1
 [node name="BtnMenu" type="Button" parent="CenterContainer/PopupBattleWon/VBoxContainer/HBoxContainer"]
 margin_right = 362.0
 margin_bottom = 85.0
+mouse_default_cursor_shape = 2
 text = "Main Menu"
 
 [node name="BtnNext" type="Button" parent="CenterContainer/PopupBattleWon/VBoxContainer/HBoxContainer"]
 margin_left = 366.0
 margin_right = 721.0
 margin_bottom = 85.0
+mouse_default_cursor_shape = 2
 text = "Next Battle"
 
 [node name="Fade" type="ColorRect" parent="."]

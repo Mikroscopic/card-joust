@@ -47,6 +47,7 @@ margin_bottom = 263.0
 [node name="BtnNewGame" type="Button" parent="MainMenu/VBoxContainer/CenterContainer/VBoxContainer"]
 margin_right = 260.0
 margin_bottom = 85.0
+mouse_default_cursor_shape = 2
 text = "Start"
 
 [node name="BtnLvlSelect" type="Button" parent="MainMenu/VBoxContainer/CenterContainer/VBoxContainer"]
@@ -54,18 +55,21 @@ visible = false
 margin_top = 89.0
 margin_right = 361.0
 margin_bottom = 174.0
+mouse_default_cursor_shape = 2
 text = "Level Select"
 
 [node name="BtnSettings" type="Button" parent="MainMenu/VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 89.0
 margin_right = 260.0
 margin_bottom = 174.0
+mouse_default_cursor_shape = 2
 text = "Settings"
 
 [node name="BtnQuit" type="Button" parent="MainMenu/VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 178.0
 margin_right = 260.0
 margin_bottom = 263.0
+mouse_default_cursor_shape = 2
 text = "Quit"
 
 [node name="LevelSelectMenu" type="Control" parent="."]
@@ -103,12 +107,14 @@ margin_bottom = 263.0
 [node name="BtnLvl0" type="Button" parent="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer/VBoxContainer"]
 margin_right = 264.0
 margin_bottom = 85.0
+mouse_default_cursor_shape = 2
 text = "Tutorial"
 
 [node name="BtnLvl1" type="Button" parent="LevelSelectMenu/CenterContainer/VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 89.0
 margin_right = 264.0
 margin_bottom = 174.0
+mouse_default_cursor_shape = 2
 disabled = true
 text = "Level 1"
 
@@ -116,6 +122,7 @@ text = "Level 1"
 margin_top = 178.0
 margin_right = 264.0
 margin_bottom = 263.0
+mouse_default_cursor_shape = 2
 disabled = true
 text = "Level 2"
 
@@ -126,6 +133,7 @@ margin_left = 50.0
 margin_top = -121.0
 margin_right = 221.0
 margin_bottom = -36.0
+mouse_default_cursor_shape = 2
 shortcut = SubResource( 2 )
 text = "Back"
 
