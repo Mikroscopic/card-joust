@@ -160,7 +160,7 @@ mouse_filter = 2
 
 [node name="Sprite" type="Sprite" parent="EnemyLane/CardSpaces/CardSpace4/CenterContainer/Control"]
 modulate = Color( 0.5, 0.4, 0.3, 1 )
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( -0.5, 0.5 )
 texture = ExtResource( 1 )
 
 [node name="CenterPoint" type="Position2D" parent="EnemyLane/CardSpaces/CardSpace4/CenterContainer/Control"]
@@ -184,7 +184,7 @@ mouse_filter = 2
 
 [node name="Sprite" type="Sprite" parent="EnemyLane/CardSpaces/CardSpace3/CenterContainer/Control"]
 modulate = Color( 0.5, 0.4, 0.3, 1 )
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( -0.5, 0.5 )
 texture = ExtResource( 1 )
 
 [node name="CenterPoint" type="Position2D" parent="EnemyLane/CardSpaces/CardSpace3/CenterContainer/Control"]
@@ -208,7 +208,7 @@ mouse_filter = 2
 
 [node name="Sprite" type="Sprite" parent="EnemyLane/CardSpaces/CardSpace2/CenterContainer/Control"]
 modulate = Color( 0.5, 0.4, 0.3, 1 )
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( -0.5, 0.5 )
 texture = ExtResource( 1 )
 
 [node name="CenterPoint" type="Position2D" parent="EnemyLane/CardSpaces/CardSpace2/CenterContainer/Control"]
@@ -232,7 +232,7 @@ mouse_filter = 2
 
 [node name="Sprite" type="Sprite" parent="EnemyLane/CardSpaces/CardSpace1/CenterContainer/Control"]
 modulate = Color( 0.5, 0.3, 0.3, 1 )
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( -0.5, 0.5 )
 texture = ExtResource( 1 )
 
 [node name="CenterPoint" type="Position2D" parent="EnemyLane/CardSpaces/CardSpace1/CenterContainer/Control"]

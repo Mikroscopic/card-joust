@@ -2,7 +2,7 @@
 
 [ext_resource path="res://assets/themes/theme_hud_hints.tres" type="Theme" id=1]
 [ext_resource path="res://assets/themes/HTOWERT.TTF" type="DynamicFontData" id=2]
-[ext_resource path="res://icon.png" type="Texture" id=3]
+[ext_resource path="res://assets/sprites/text_arrow.png" type="Texture" id=3]
 
 [sub_resource type="Animation" id=4]
 resource_name = "text_write"
@@ -93,8 +93,8 @@ visible_characters = 0
 percent_visible = 0.0
 
 [node name="Arrow" type="Sprite" parent="."]
-visible = false
 position = Vector2( 1000, 210 )
+scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 3 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Arrow"]
