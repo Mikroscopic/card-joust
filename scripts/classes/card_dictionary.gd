@@ -56,7 +56,7 @@ const cards = {
 		"name": "BRITTLE LANCE",
 		"description": "Dies after attacking for the first time.",
 		"image_bg": "",
-		"image_portrait": "",
+		"image_portrait": "cd_art_boss_lance.png",
 		"power": 3,
 		"value": 0,
 		"health": 1,
@@ -66,7 +66,7 @@ const cards = {
 		"description": "This card's attack power is equal to that of the " \
 			+ "card in the opposing space.",
 		"image_bg": "",
-		"image_portrait": "",
+		"image_portrait": "cd_art_boss_eye.png",
 		"power": 0,
 		"value": 2,
 		"health": 2,
@@ -76,7 +76,7 @@ const cards = {
 		"description": "This card's attack power is equal to its health. " \
 			+ "Gains 1 health at the end of its owner's turn.",
 		"image_bg": "",
-		"image_portrait": "",
+		"image_portrait": "cd_art_boss_heart.png",
 		"power": 1,
 		"value": 2,
 		"health": 1,
@@ -87,7 +87,7 @@ const cards = {
 			+ "attack, and can only move if a card in the space behind it " \
 			+ "can move.",
 		"image_bg": "",
-		"image_portrait": "",
+		"image_portrait": "cd_art_boss_hand.png",
 		"power": 1,
 		"value": 4,
 		"health": 2,
