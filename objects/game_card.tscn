@@ -142,3 +142,4 @@ shape = SubResource( 1 )
 
 [node name="Sfx" type="AudioStreamPlayer2D" parent="."]
 volume_db = -1.0
+bus = "Sfx"

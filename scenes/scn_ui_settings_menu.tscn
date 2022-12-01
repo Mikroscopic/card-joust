@@ -109,6 +109,77 @@ margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/TabContainer/Audio"]
+margin_right = 992.0
+margin_bottom = 70.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/TabContainer/Audio/HBoxContainer"]
+margin_right = 500.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 500, 70 )
+theme = ExtResource( 1 )
+text = "Master volume"
+
+[node name="SliderVolMaster" type="HSlider" parent="CenterContainer/TabContainer/Audio/HBoxContainer"]
+margin_left = 504.0
+margin_right = 904.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 400, 0 )
+mouse_default_cursor_shape = 2
+max_value = 2.0
+step = 0.04
+value = 1.0
+tick_count = 5
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/TabContainer/Audio"]
+margin_top = 74.0
+margin_right = 960.0
+margin_bottom = 78.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/TabContainer/Audio"]
+margin_right = 992.0
+margin_bottom = 70.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/TabContainer/Audio/HBoxContainer2"]
+margin_right = 500.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 500, 70 )
+theme = ExtResource( 1 )
+text = "Sound effects"
+
+[node name="SliderVolSfx" type="HSlider" parent="CenterContainer/TabContainer/Audio/HBoxContainer2"]
+margin_left = 504.0
+margin_right = 904.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 400, 0 )
+mouse_default_cursor_shape = 2
+max_value = 1.0
+step = 0.02
+value = 1.0
+tick_count = 5
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/TabContainer/Audio"]
+margin_right = 992.0
+margin_bottom = 70.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/TabContainer/Audio/HBoxContainer3"]
+margin_right = 500.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 500, 70 )
+theme = ExtResource( 1 )
+text = "Music"
+
+[node name="SliderVolMusic" type="HSlider" parent="CenterContainer/TabContainer/Audio/HBoxContainer3"]
+margin_left = 504.0
+margin_right = 904.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 400, 0 )
+mouse_default_cursor_shape = 2
+max_value = 1.0
+step = 0.02
+value = 1.0
+tick_count = 5
+
 [node name="BtnBack" type="Button" parent="."]
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -126,4 +197,7 @@ text = "Back"
 [connection signal="drag_ended" from="CenterContainer/TabContainer/Graphics/HBoxContainer3/SliderAnimateSpeed" to="." method="_on_SliderAnimateSpeed_drag_ended"]
 [connection signal="value_changed" from="CenterContainer/TabContainer/Graphics/HBoxContainer3/SliderAnimateSpeed" to="." method="_on_SliderAnimateSpeed_value_changed"]
 [connection signal="toggled" from="CenterContainer/TabContainer/Graphics/HBoxContainer4/CheckBoxRomanNums" to="." method="_on_CheckBoxRomanNum_toggled"]
+[connection signal="value_changed" from="CenterContainer/TabContainer/Audio/HBoxContainer/SliderVolMaster" to="." method="_on_SliderVolMaster_value_changed"]
+[connection signal="value_changed" from="CenterContainer/TabContainer/Audio/HBoxContainer2/SliderVolSfx" to="." method="_on_SliderVolSfx_value_changed"]
+[connection signal="value_changed" from="CenterContainer/TabContainer/Audio/HBoxContainer3/SliderVolMusic" to="." method="_on_SliderVolMusic_value_changed"]
 [connection signal="pressed" from="BtnBack" to="." method="_on_BtnBack_pressed"]

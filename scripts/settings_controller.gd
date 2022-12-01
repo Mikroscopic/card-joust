@@ -5,6 +5,10 @@ var graphics_fullscreen = true setget set_graphics_fullscreen
 var graphics_animation_timescale = 1.0
 var graphics_animation_time_slider = 1.0 setget set_graphics_animation_time_slider
 var graphics_roman_numerals = true setget set_graphics_roman_numerals
+var audio_master_volume = 1.0 setget set_audio_master_volume
+var audio_sfx_volume = 1.0 setget set_audio_sfx_volume
+var audio_music_volume = 1.0 setget set_audio_music_volume
+
 
 
 func _ready():
@@ -26,6 +30,9 @@ func load_settings():
 	self.graphics_fullscreen = bool(settings_data["fullscreen"])
 	self.graphics_animation_time_slider = float(settings_data["animation_timescale"])
 	self.graphics_roman_numerals = bool(settings_data["roman_numerals"])
+	self.audio_master_volume = float(settings_data["master_volume"])
+	self.audio_sfx_volume = float(settings_data["sfx_volume"])
+	self.audio_music_volume = float(settings_data["music_volume"])
 
 
 func set_graphics_fullscreen(v):
@@ -45,3 +52,27 @@ func set_graphics_animation_time_slider(v):
 
 func set_graphics_roman_numerals(v):
 	graphics_roman_numerals = v
+
+
+func set_audio_master_volume(v):
+	audio_master_volume = v
+	AudioServer.set_bus_volume_db(
+		AudioServer.get_bus_index("Master"),
+		linear2db(audio_master_volume)
+	)
+
+
+func set_audio_sfx_volume(v):
+	audio_sfx_volume = v
+	AudioServer.set_bus_volume_db(
+		AudioServer.get_bus_index("Sfx"),
+		linear2db(audio_sfx_volume)
+	)
+
+
+func set_audio_music_volume(v):
+	audio_music_volume = v
+	AudioServer.set_bus_volume_db(
+		AudioServer.get_bus_index("Music"),
+		linear2db(audio_music_volume)
+	)

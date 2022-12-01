@@ -203,6 +203,7 @@ valign = 1
 [node name="SfxPing" type="AudioStreamPlayer2D" parent="PlayerScore"]
 position = Vector2( 100, 50 )
 stream = ExtResource( 15 )
+bus = "Sfx"
 
 [node name="EnemyScore" type="Label" parent="."]
 margin_left = 290.0
@@ -218,6 +219,7 @@ valign = 1
 [node name="SfxPing" type="AudioStreamPlayer2D" parent="EnemyScore"]
 position = Vector2( 100, 50 )
 stream = ExtResource( 15 )
+bus = "Sfx"
 
 [node name="HintBox" type="PanelContainer" parent="."]
 margin_left = 30.0
@@ -321,15 +323,18 @@ anims/scene_slide_in = SubResource( 2 )
 [node name="SfxBattleHorn" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 14 )
 volume_db = -20.0
+bus = "Sfx"
 
 [node name="SfxBuyCard" type="AudioStreamPlayer2D" parent="."]
 position = Vector2( 1700, 870 )
 stream = ExtResource( 16 )
+bus = "Sfx"
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 pause_mode = 2
 stream = ExtResource( 17 )
 autoplay = true
+bus = "Music"
 
 [connection signal="next_phase_triggered" from="." to="." method="_on_next_phase_triggered"]
 [connection signal="player_lost" from="." to="." method="_on_ScnCardBattle_player_lost"]
