@@ -74,11 +74,7 @@ func init (id: String):
 	self.card_description = card_data.description
 	
 	if card_data.image_portrait != "":
-		var img_portrait = Image.new()
-		img_portrait.load("res://assets/sprites/cards/" + card_data.image_portrait)
-		var tex_portrait = ImageTexture.new()
-		tex_portrait.create_from_image(img_portrait)
-		$CardVisual/Art.texture = tex_portrait
+		$CardVisual/Art.texture = load("res://assets/sprites/cards/" + card_data.image_portrait)
 	
 	self.power = card_data.power
 	self.value = card_data.value

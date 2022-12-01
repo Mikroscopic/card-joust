@@ -84,11 +84,7 @@ func _ready():
 	
 	# Enemy name and portrait
 	$Portrait/Name.text = _enemy_name
-	var img_portrait = Image.new()
-	img_portrait.load("res://assets/sprites/portraits/" + _enemy_portrait)
-	var tex_portrait = ImageTexture.new()
-	tex_portrait.create_from_image(img_portrait)
-	$Portrait/Head.texture = tex_portrait
+	$Portrait/Head.texture = load("res://assets/sprites/portraits/" + _enemy_portrait)
 	
 	begin_battle()
 
