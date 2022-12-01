@@ -3,11 +3,11 @@
 [ext_resource path="res://assets/themes/theme_hud_main.tres" type="Theme" id=1]
 [ext_resource path="res://scripts/scene_scripts/scn_ui_settings_menu.gd" type="Script" id=2]
 
-[sub_resource type="InputEventAction" id=1]
+[sub_resource type="InputEventAction" id=3]
 action = "ui_cancel"
 
 [sub_resource type="ShortCut" id=2]
-shortcut = SubResource( 1 )
+shortcut = SubResource( 3 )
 
 [node name="ScnUiSettingsMenu" type="Control"]
 anchor_right = 1.0

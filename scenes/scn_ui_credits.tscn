@@ -1,0 +1,76 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://assets/themes/theme_hud_main.tres" type="Theme" id=1]
+[ext_resource path="res://scripts/scene_scripts/scn_ui_credits.gd" type="Script" id=2]
+[ext_resource path="res://assets/themes/fnt_hud_02.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/themes/fnt_title.tres" type="DynamicFont" id=4]
+
+[sub_resource type="InputEventAction" id=1]
+action = "ui_cancel"
+
+[sub_resource type="ShortCut" id=2]
+shortcut = SubResource( 1 )
+
+[node name="ScnUiCredits" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+margin_left = 210.0
+margin_top = 50.0
+margin_right = 1710.0
+margin_bottom = 1029.0
+custom_constants/separation = 50
+
+[node name="Thanks" type="Label" parent="CenterContainer/VBoxContainer"]
+margin_right = 1500.0
+margin_bottom = 129.0
+custom_fonts/font = ExtResource( 4 )
+text = "Thank you for playing!"
+align = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer"]
+margin_top = 179.0
+margin_right = 1500.0
+margin_bottom = 979.0
+rect_min_size = Vector2( 1500, 800 )
+custom_fonts/normal_font = ExtResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[center]Game design, artwork and music by Mikroscopic
+( [color=blue]mikroscopic.itch.io[/color] )
+
+Scrolling background shader code by Exuin
+( [color=blue]godotshaders.com/shader/scrolling-background[/color] )
+
+Sound effects from Pixabay
+
+Portrait of Henry II from Wikimedia Commons[/center]"
+text = "Game design, artwork and music by Mikroscopic
+( mikroscopic.itch.io )
+
+Scrolling background shader code by Exuin
+( godotshaders.com/shader/scrolling-background )
+
+Sound effects from Pixabay
+
+Portrait of Henry II from Wikimedia Commons"
+
+[node name="BtnBack" type="Button" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = -121.0
+margin_right = 221.0
+margin_bottom = -36.0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 1 )
+shortcut = SubResource( 2 )
+text = "Back"
+
+[connection signal="pressed" from="BtnBack" to="." method="_on_BtnBack_pressed"]
