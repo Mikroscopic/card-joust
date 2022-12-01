@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://scripts/scene_scripts/scn_card_battle.gd" type="Script" id=1]
 [ext_resource path="res://objects/game_board.tscn" type="PackedScene" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://assets/sounds/battle_horn.wav" type="AudioStream" id=14]
 [ext_resource path="res://assets/sounds/ping.wav" type="AudioStream" id=15]
 [ext_resource path="res://assets/sounds/coin_drop.wav" type="AudioStream" id=16]
+[ext_resource path="res://assets/music/mus_battle.wav" type="AudioStream" id=17]
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -324,6 +325,11 @@ volume_db = -20.0
 [node name="SfxBuyCard" type="AudioStreamPlayer2D" parent="."]
 position = Vector2( 1700, 870 )
 stream = ExtResource( 16 )
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
+stream = ExtResource( 17 )
+autoplay = true
 
 [connection signal="next_phase_triggered" from="." to="." method="_on_next_phase_triggered"]
 [connection signal="player_lost" from="." to="." method="_on_ScnCardBattle_player_lost"]
