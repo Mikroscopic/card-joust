@@ -10,7 +10,8 @@ func _on_ScnUiSettingsMenu_visibility_changed():
 
 
 func _on_BtnBack_pressed():
-	save_settings()
+	if not OS.has_feature("HTML5"):
+		save_settings()
 	emit_signal("settings_saved")
 
 
@@ -58,7 +59,11 @@ func save_settings():
 
 
 func load_settings():
-	find_node("CheckBoxFullscreen").pressed = SettingsController.graphics_fullscreen
+	if not OS.has_feature("HTML5"):
+		find_node("CheckBoxFullscreen").pressed = SettingsController.graphics_fullscreen
+	else:
+		find_node("CheckBoxFullscreen").pressed = false
+		$CenterContainer/TabContainer/Graphics/HBoxContainer2.visible = false
 	find_node("SliderAnimateSpeed").value = SettingsController.graphics_animation_time_slider
 	find_node("CheckBoxRomanNums").pressed = SettingsController.graphics_roman_numerals
 	find_node("SliderVolMaster").value = SettingsController.audio_master_volume

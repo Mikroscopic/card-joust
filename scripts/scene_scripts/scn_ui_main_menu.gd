@@ -16,6 +16,8 @@ func _ready():
 	if show_level_select:
 		find_node("BtnNewGame").hide()
 		find_node("BtnLvlSelect").show()
+	if OS.has_feature("HTML5"):
+		$MainMenu/VBoxContainer/CenterContainer/VBoxContainer/BtnQuit.visible = false
 
 
 func _on_BtnNewGame_pressed():

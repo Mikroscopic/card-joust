@@ -7,6 +7,11 @@ onready var node_pause_menu = $PauseMenu
 onready var node_ui_settings_menu = $ScnUiSettingsMenu
 
 
+func _ready():
+	if OS.has_feature("HTML5"):
+		$PauseMenu/VBoxContainer/CenterContainer/VBoxContainer/BtnQuit.visible = false
+
+
 func _unhandled_input(event):
 	if (
 		event.is_action_pressed("ui_pause")

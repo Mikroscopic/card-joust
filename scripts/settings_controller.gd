@@ -16,7 +16,8 @@ func _ready():
 	var cursor_img_hand = load("res://assets/sprites/cursor_hand.png")
 	Input.set_custom_mouse_cursor(cursor_img_arrow, Input.CURSOR_ARROW)
 	Input.set_custom_mouse_cursor(cursor_img_hand, Input.CURSOR_POINTING_HAND, Vector2(10.0, 2.0))
-	load_settings()
+	if not OS.has_feature("HTML5"):
+		load_settings()
 
 
 func load_settings():

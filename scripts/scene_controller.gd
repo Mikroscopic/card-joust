@@ -5,7 +5,8 @@ var _level_progress = 0
 
 
 func _ready():
-	load_level_progress()
+	if not OS.has_feature("HTML5"):
+		load_level_progress()
 
 func change_scene(path: String):
 	get_tree().change_scene(path)
@@ -39,7 +40,8 @@ func reload_scene_fade(time: float):
 
 func set_level_completed(level):
 	_level_progress = _level_progress | (1 << level)
-	save_level_progress()
+	if not OS.has_feature("HTML5"):
+		save_level_progress()
 
 
 func get_level_progress():
