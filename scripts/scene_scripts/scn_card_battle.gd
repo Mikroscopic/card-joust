@@ -14,10 +14,6 @@ const UiCard = preload("res://objects/ui_card.tscn")
 const SCORE_GOAL = 20
 
 var turn = 0
-var player_lane_spaces = []
-var player_lane_cards = []
-var enemy_lane_spaces = []
-var enemy_lane_cards = []
 
 var _level_index
 # 0	player play card
@@ -37,6 +33,22 @@ var _enemy_deck = []
 var _enemy_hand = []
 var _enemy_queued_card
 
+onready var player_lane_spaces = $GameBoard/PlayerLane/CardSpaces.get_children()
+var player_lane_cards = []
+onready var enemy_lane_spaces = $GameBoard/EnemyLane/CardSpaces.get_children()
+var enemy_lane_cards = []
+onready var node_player_score = $PlayerScore
+onready var node_enemy_score = $EnemyScore
+onready var node_hint_box_text = $HintBox/RichTextLabel
+onready var node_button_end_turn = $ButtonEndTurn
+onready var node_game_deck = $GameDeck
+onready var node_board_cards = $BoardCards
+onready var node_next_card_position = $LabelNextCard/Position2D
+onready var node_game_hand = $GameHand
+onready var node_debug_game_phase = $DebugGamePhase
+onready var node_animation_player = $AnimationPlayer
+onready var node_sfx_battle_horn = $SfxBattleHorn
+onready var node_sfx_buy_card = $SfxBuyCard
 
 # Builtin functions
 
@@ -70,13 +82,11 @@ func _ready():
 	#seed(hash(1))
 	
 	# Initialize player lane
-	player_lane_spaces = $GameBoard/PlayerLane/CardSpaces.get_children()
 	for i in range(player_lane_spaces.size()):
 		player_lane_cards.append(null)
 	player_lane_spaces.append($GameBoard/PlayerLane/EndSpace)
 	
 	# Initialize enemy lane
-	enemy_lane_spaces = $GameBoard/EnemyLane/CardSpaces.get_children()
 	enemy_lane_spaces.invert()
 	for i in range(enemy_lane_spaces.size()):
 		enemy_lane_cards.append(null)
@@ -96,11 +106,11 @@ func begin_battle():
 	# Wait for scene transition
 	if ScnUiOverlay.find_node("Tween").is_active():
 		yield(ScnUiOverlay.find_node("Tween"), "tween_all_completed")
-	$AnimationPlayer.play("portrait_introduce")
-	yield($AnimationPlayer, "animation_finished")
-	$AnimationPlayer.play("scene_slide_in")
-	yield($AnimationPlayer, "animation_finished")
-	$AnimationPlayer.play("portrait_to_corner")
+	node_animation_player.play("portrait_introduce")
+	yield(node_animation_player, "animation_finished")
+	node_animation_player.play("scene_slide_in")
+	yield(node_animation_player, "animation_finished")
+	node_animation_player.play("portrait_to_corner")
 	ScnUiOverlay.show()
 	yield(ScnUiOverlay.animate_popup("battle_begin"), "completed")
 	ScnUiOverlay.hide_popup()
@@ -113,7 +123,7 @@ func begin_battle():
 		_enemy_hand.append(card_id)
 	
 	# Shuffle the deck
-	$GameDeck.shuffle()
+	node_game_deck.shuffle()
 	# Draw cards for player's initial hand
 	yield(draw_card(3), "completed")
 	
@@ -122,12 +132,12 @@ func begin_battle():
 	if _enemy_queued_card:
 		var card_preview = UiCard.instance().init(_enemy_queued_card)
 		card_preview.scale = Vector2(0.6, 0.6)
-		$LabelNextCard/Position2D.add_child(card_preview)
+		node_next_card_position.add_child(card_preview)
 	turn += 1
 	
 	#emit_signal("next_phase_triggered", 0)
-	$DebugGamePhase.text = "player play"
-	$ButtonEndTurn.disabled = false
+	node_debug_game_phase.text = "player play"
+	node_button_end_turn.disabled = false
 
 
 func generate_card(owner:int = 0):
@@ -152,11 +162,11 @@ func generate_card(owner:int = 0):
 func draw_card(count = 1):
 	var new_cards = []
 	for i in range(count):
-		var new_card = $GameDeck.get_card()
+		var new_card = node_game_deck.get_card()
 		if new_card == null:
 			break
-		new_card.global_position = $GameDeck.global_position
-		$GameHand.addCard(new_card)
+		new_card.global_position = node_game_deck.global_position
+		node_game_hand.addCard(new_card)
 		new_cards.append(new_card)
 		yield(
 			get_tree().create_timer(
@@ -193,7 +203,7 @@ func update_score(team, value):
 	var i = value
 	while i != 0:
 		_scores[team] += 1 if value > 0 else -1
-		var score_label = [$PlayerScore, $EnemyScore][team]
+		var score_label = [node_player_score, node_enemy_score][team]
 		score_label.text = str(_scores[team])
 		score_label.find_node("SfxPing").play()
 		score_label.find_node("SfxPing").pitch_scale = _scores[team] / 20.0 + 0.5
@@ -273,7 +283,7 @@ func enemy_get_card_candidate_fitness(
 
 
 func enemy_play_card(card_id: String):
-	for n in $LabelNextCard/Position2D.get_children():
+	for n in node_next_card_position.get_children():
 		yield(n.slide_to_position(n.global_position + Vector2(0, -400), 0.25), "completed")
 		n.queue_free()
 	yield(get_tree(), "idle_frame")
@@ -283,7 +293,7 @@ func enemy_play_card(card_id: String):
 	self.connect("board_state_changed", card, "_on_board_state_changed")
 	var enemy_play_pos = enemy_lane_spaces[0].find_node("CenterPoint").global_position
 	enemy_lane_cards[0] = card
-	$BoardCards.add_child(card)
+	node_board_cards.add_child(card)
 	card.scale = Vector2(0.8, 0.8)
 	card.global_position = enemy_play_pos + Vector2(0, -400)
 	card.play_sound("deal_a")
@@ -294,8 +304,8 @@ func enemy_play_card(card_id: String):
 
 
 func check_bankruptcy():
-	if ($GameDeck.cards_size() == 0
-		and $GameHand/Cards.get_child_count() == 0
+	if (node_game_deck.cards_size() == 0
+		and node_game_hand.get_node("Cards").get_child_count() == 0
 		and player_lane_cards.count(null) == len(player_lane_cards)
 	):
 		ScnUiDialogue.active_box = 1
@@ -308,17 +318,17 @@ func check_bankruptcy():
 
 
 func perform_player_play():
-	$DebugGamePhase.text = "player play"
+	node_debug_game_phase.text = "player play"
 	turn += 1
-	yield($GameHand.set_active(true), "completed")
+	yield(node_game_hand.set_active(true), "completed")
 	draw_card()
-	$ButtonEndTurn.disabled = false
+	node_button_end_turn.disabled = false
 
 
 func perform_player_attack():
-	$DebugGamePhase.text = "player attack"
-	$GameHand.active = false
-	$ButtonEndTurn.disabled = true
+	node_debug_game_phase.text = "player attack"
+	node_game_hand.active = false
+	node_button_end_turn.disabled = true
 	
 	yield(make_cards_attack(player_lane_cards), "completed")
 			
@@ -328,7 +338,7 @@ func perform_player_attack():
 
 
 func perform_player_move():
-	$DebugGamePhase.text = "player move"
+	node_debug_game_phase.text = "player move"
 	
 	yield(move_cards(player_lane_cards), "completed")
 	
@@ -341,7 +351,7 @@ func perform_player_move():
 
 
 func perform_enemy_play():
-	$DebugGamePhase.text = "opponent play"
+	node_debug_game_phase.text = "opponent play"
 	
 	if _enemy_queued_card and enemy_lane_cards[0] == null:
 		_enemy_hand.erase(_enemy_queued_card)
@@ -354,7 +364,7 @@ func perform_enemy_play():
 
 
 func perform_enemy_attack():
-	$DebugGamePhase.text = "opponent attack"
+	node_debug_game_phase.text = "opponent attack"
 	
 	yield(make_cards_attack(enemy_lane_cards), "completed")
 	
@@ -364,7 +374,7 @@ func perform_enemy_attack():
 
 
 func perform_enemy_move():
-	$DebugGamePhase.text = "opponent move"
+	node_debug_game_phase.text = "opponent move"
 	
 	yield(move_cards(enemy_lane_cards), "completed")
 	
@@ -377,7 +387,7 @@ func perform_enemy_move():
 
 
 func perform_enemy_pick():
-	$DebugGamePhase.text = "opponent draw"
+	node_debug_game_phase.text = "opponent draw"
 	
 	enemy_choose_next_card()
 	
@@ -385,7 +395,7 @@ func perform_enemy_pick():
 	if _enemy_queued_card:
 		var card_preview = UiCard.instance().init(_enemy_queued_card)
 		card_preview.scale = Vector2(0.6, 0.6)
-		$LabelNextCard/Position2D.add_child(card_preview)
+		node_next_card_position.add_child(card_preview)
 	
 	emit_signal("next_phase_triggered", 0)
 
@@ -398,7 +408,7 @@ func _on_next_phase_triggered(phase: int):
 			check_bankruptcy()
 			perform_player_play()
 		1:
-			$SfxBattleHorn.play()
+			node_sfx_battle_horn.play()
 			perform_player_attack()
 		2:
 			perform_player_move()
@@ -417,7 +427,7 @@ func _on_GameDeck_clicked():
 		return
 	if _scores[0] == 0:
 		return
-	$SfxBuyCard.play()
+	node_sfx_buy_card.play()
 	update_score(0, -1)
 	draw_card()
 
@@ -432,8 +442,8 @@ func _on_GameCard_played(card):
 	self.connect("board_state_changed", card, "_on_board_state_changed")
 	player_lane_cards[0] = card
 	var card_pos = card.global_position
-	$GameHand.removeCard(card)
-	$BoardCards.add_child(card)
+	node_game_hand.removeCard(card)
+	node_board_cards.add_child(card)
 	card.scale = Vector2(0.8, 0.8)
 	card.global_position = card_pos
 	card.play_sound("deal_a")
@@ -467,7 +477,7 @@ func _on_ScnCardBattle_player_won():
 
 func _on_CardSelector_card_selected(card):
 	if "card_id" in card:
-		$HintBox/RichTextLabel.bbcode_text = (
+		node_hint_box_text.bbcode_text = (
 			"[center][color=blue]"
 			+ card.card_name
 			+ "[/color]\n[color=grey]"
@@ -480,4 +490,4 @@ func _on_CardSelector_card_selected(card):
 
 
 func _on_CardSelector_none_selected():
-	$HintBox/RichTextLabel.bbcode_text = ""
+	node_hint_box_text.bbcode_text = ""

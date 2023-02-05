@@ -14,6 +14,8 @@ var _is_selected
 
 var _card_margin = 10
 
+onready var node_card_sprites = $DeckVisual/CardSprites
+onready var node_collision_shape = $CollisionShape2D
 
 # Builtin functions
 
@@ -24,7 +26,7 @@ func _ready():
 	
 	if _cards.size() > 0:
 		_card_margin = min(10, int(50 / min(_cards.size(), 10)))
-	$DeckVisual/CardSprites.add_constant_override("separation", _card_margin)
+	node_card_sprites.add_constant_override("separation", _card_margin)
 	for i in range(min(_cards.size(), 10)):
 		var sprite_control = Control.new()
 		var sprite = Sprite.new()
@@ -33,7 +35,7 @@ func _ready():
 		sprite.rotation_degrees = 45
 		sprite_control.add_child(sprite)
 		#sprite.position.y = -_card_margin * i
-		$DeckVisual/CardSprites.add_child(sprite_control)
+		node_card_sprites.add_child(sprite_control)
 
 
 func _physics_process(delta):
@@ -57,20 +59,20 @@ func load_top_deck(card_id: String):
 
 func get_card():
 	if _cards.size() == 0:
-		$CollisionShape2D.set_deferred("disabled", true)
+		node_collision_shape.set_deferred("disabled", true)
 		return null
 	
 	# Remove a card
 	var card_id = _cards.pop_back()
 	if _cards.size() < 10:
-		$DeckVisual/CardSprites.get_child(_cards.size()).queue_free()
+		node_card_sprites.get_child(_cards.size()).queue_free()
 	
 	# Reorganize the deck
 	if _cards.size() > 0:
-		_card_margin = min(10, int(50 / $DeckVisual/CardSprites.get_child_count()))
-		$DeckVisual/CardSprites.add_constant_override("separation", _card_margin)
+		_card_margin = min(10, int(50 / node_card_sprites.get_child_count()))
+		node_card_sprites.add_constant_override("separation", _card_margin)
 	else:
-		$CollisionShape2D.set_deferred("disabled", true)
+		node_collision_shape.set_deferred("disabled", true)
 	
 	# Return a card with the appropriate stats
 	return GameCardPlayer.instance().init(card_id)

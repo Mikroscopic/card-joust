@@ -8,10 +8,13 @@ var _cards = []
 var _card_positions = []
 var _card_margin = 100
 
+onready var node_animation_player = $AnimationPlayer
+onready var node_cards = $Cards
+
 
 func addCard(card):
 	var card_pos = card.global_position
-	$Cards.add_child(card)
+	node_cards.add_child(card)
 	card.global_position = card_pos
 	_cards.append(card)
 	_card_positions.append(Vector2(0, 0))
@@ -23,7 +26,7 @@ func addCard(card):
 func removeCard(card):
 	var index = _cards.find(card)
 	_cards.remove(index)
-	$Cards.remove_child(card)
+	node_cards.remove_child(card)
 	_card_positions.remove(index)
 	calc_card_positions()
 	card.is_in_hand = false
@@ -47,5 +50,5 @@ func calc_card_positions():
 func set_active(value):
 	for card in _cards:
 		card.find_node("CollisionShape2D").set_deferred("disabled", !value)
-	$AnimationPlayer.play("slide_offscreen", -1, -1 if value else 1, value)
-	yield($AnimationPlayer, "animation_finished")
+	node_animation_player.play("slide_offscreen", -1, -1 if value else 1, value)
+	yield(node_animation_player, "animation_finished")

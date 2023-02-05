@@ -1,5 +1,9 @@
 extends Control
 
+onready var node_main_menu = $MainMenu
+onready var node_level_select_menu = $LevelSelectMenu
+onready var node_ui_settings_menu = $ScnUiSettingsMenu
+
 
 func _ready():
 	var show_level_select = false
@@ -19,13 +23,13 @@ func _on_BtnNewGame_pressed():
 
 
 func _on_BtnLvlSelect_pressed():
-	$MainMenu.hide()
-	$LevelSelectMenu.show()
+	node_main_menu.hide()
+	node_level_select_menu.show()
 
 
 func _on_BtnLvlSelectBack_pressed():
-	$LevelSelectMenu.hide()
-	$MainMenu.show()
+	node_level_select_menu.hide()
+	node_main_menu.show()
 
 
 func _on_BtnLvl0_pressed():
@@ -41,8 +45,8 @@ func _on_BtnLvl2_pressed():
 
 
 func _on_BtnSettings_pressed():
-	$MainMenu.hide()
-	$ScnUiSettingsMenu.show()
+	node_main_menu.hide()
+	node_ui_settings_menu.show()
 
 
 func _on_BtnCredits_pressed():
@@ -54,5 +58,5 @@ func _on_BtnQuit_pressed():
 
 
 func _on_ScnUiSettingsMenu_settings_saved():
-	$ScnUiSettingsMenu.hide()
-	$MainMenu.show()
+	node_ui_settings_menu.hide()
+	node_main_menu.show()

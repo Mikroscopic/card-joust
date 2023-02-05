@@ -6,8 +6,8 @@ var gave_score_lesson = false
 
 
 func begin_battle():
-	$AnimationPlayer.play("seq_tutorial_reset")
-	yield($AnimationPlayer, "animation_finished")
+	node_animation_player.play("seq_tutorial_reset")
+	yield(node_animation_player, "animation_finished")
 	# Wait for scene transition
 	if ScnUiOverlay.find_node("Tween").is_active():
 		yield(ScnUiOverlay.find_node("Tween"), "tween_all_completed")
@@ -18,13 +18,13 @@ func begin_battle():
 		var card_id = _enemy_deck.pop_back()
 		_enemy_hand.append(card_id)
 	
-	$GameDeck.shuffle()
-	$GameDeck.load_top_deck("MEDIEVAL_THIEF")
-	$GameDeck.load_top_deck("MEDIEVAL_KNIGHT")
-	$GameDeck.load_top_deck("MEDIEVAL_PEASANT")
-	$GameDeck.load_top_deck("MEDIEVAL_KNIGHT")
-	$GameDeck.load_top_deck("MEDIEVAL_LORD")
-	$GameDeck.load_top_deck("MEDIEVAL_PEASANT")
+	node_game_deck.shuffle()
+	node_game_deck.load_top_deck("MEDIEVAL_THIEF")
+	node_game_deck.load_top_deck("MEDIEVAL_KNIGHT")
+	node_game_deck.load_top_deck("MEDIEVAL_PEASANT")
+	node_game_deck.load_top_deck("MEDIEVAL_KNIGHT")
+	node_game_deck.load_top_deck("MEDIEVAL_LORD")
+	node_game_deck.load_top_deck("MEDIEVAL_PEASANT")
 	
 	play_tutorial()
 
@@ -43,18 +43,18 @@ func play_tutorial():
 	yield(ScnUiDialogue, "messages_finished")
 	
 	# Reveal the first space and player's deck
-	$AnimationPlayer.play("seq_tutorial_001")
-	yield($AnimationPlayer, "animation_finished")
+	node_animation_player.play("seq_tutorial_001")
+	yield(node_animation_player, "animation_finished")
 	
 	# Draw cards for player's initial hand
 	yield(draw_card(3), "completed")
 	
-	$DebugGamePhase.text = "player play"
+	node_debug_game_phase.text = "player play"
 	
 	ScnUiDialogue.active_box = 0
 	ScnUiDialogue.messages = ["Pick a card."]
 	# Wait for player to play a card
-	yield($BoardCards, "child_entered_tree")
+	yield(node_board_cards, "child_entered_tree")
 	first_played_card = player_lane_cards[0].card_name
 	yield(get_tree().create_timer(0.5, false), "timeout")
 	
@@ -64,8 +64,8 @@ func play_tutorial():
 	yield(ScnUiDialogue, "messages_finished")
 	
 	# Reveal the rest of the spaces in the player lane
-	$AnimationPlayer.play("seq_tutorial_002")
-	yield($AnimationPlayer, "animation_finished")
+	node_animation_player.play("seq_tutorial_002")
+	yield(node_animation_player, "animation_finished")
 	
 	ScnUiDialogue.messages = [
 		("Glory lies at the other end of the lane. "
@@ -75,8 +75,8 @@ func play_tutorial():
 	yield(ScnUiDialogue, "messages_finished")
 	
 	# Reveal the button
-	$ButtonEndTurn.disabled = false
-	$AnimationPlayer.play("seq_tutorial_003")
+	node_button_end_turn.disabled = false
+	node_animation_player.play("seq_tutorial_003")
 	yield(self, "next_phase_triggered")
 	# Normal game loop begins from here
 
@@ -96,7 +96,7 @@ func enemy_choose_next_card():
 
 
 func perform_player_play():
-	$DebugGamePhase.text = "player play"
+	node_debug_game_phase.text = "player play"
 	turn += 1
 	
 	match turn:
@@ -126,8 +126,8 @@ func perform_player_play():
 				+ "and act accordingly."),
 			]
 			yield(ScnUiDialogue, "messages_finished")
-			$AnimationPlayer.play("seq_tutorial_005")
-			yield($AnimationPlayer, "animation_finished")
+			node_animation_player.play("seq_tutorial_005")
+			yield(node_animation_player, "animation_finished")
 			
 			ScnUiDialogue.active_box = 0
 			ScnUiDialogue.messages = [
@@ -135,9 +135,9 @@ func perform_player_play():
 			]
 			yield(ScnUiDialogue, "messages_finished")
 	
-	yield($GameHand.set_active(true), "completed")
+	yield(node_game_hand.set_active(true), "completed")
 	draw_card()
-	$ButtonEndTurn.disabled = false
+	node_button_end_turn.disabled = false
 	
 	match turn:
 		3:
@@ -147,12 +147,12 @@ func perform_player_play():
 				+ "Hover your hand over any card in your sight, and sense "
 				+ "its power."),
 			]
-			$AnimationPlayer.play("seq_tutorial_006")
-			yield($AnimationPlayer, "animation_finished")
+			node_animation_player.play("seq_tutorial_006")
+			yield(node_animation_player, "animation_finished")
 
 
 func perform_player_move():
-	$DebugGamePhase.text = "player move"
+	node_debug_game_phase.text = "player move"
 	
 	yield(move_cards(player_lane_cards), "completed")
 	
@@ -178,7 +178,7 @@ func perform_player_move():
 
 
 func perform_enemy_play():
-	$DebugGamePhase.text = "opponent play"
+	node_debug_game_phase.text = "opponent play"
 	
 	var card
 	match turn:
@@ -191,8 +191,8 @@ func perform_enemy_play():
 			yield(ScnUiDialogue, "messages_finished")
 			
 			# Refveal enemy lane
-			$AnimationPlayer.play("seq_tutorial_004")
-			yield($AnimationPlayer, "animation_finished")
+			node_animation_player.play("seq_tutorial_004")
+			yield(node_animation_player, "animation_finished")
 			
 			card = "MEDIEVAL_KNIGHT"
 		_:
@@ -207,7 +207,7 @@ func perform_enemy_play():
 
 
 func perform_enemy_attack():
-	$DebugGamePhase.text = "opponent attack"
+	node_debug_game_phase.text = "opponent attack"
 	
 	match turn:
 		1:
@@ -238,7 +238,7 @@ func perform_enemy_attack():
 
 
 func perform_enemy_move():
-	$DebugGamePhase.text = "opponent move"
+	node_debug_game_phase.text = "opponent move"
 	
 	yield(move_cards(enemy_lane_cards), "completed")
 	

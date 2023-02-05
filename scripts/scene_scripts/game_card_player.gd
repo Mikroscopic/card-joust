@@ -22,20 +22,20 @@ func _init():
 func _physics_process(delta):
 	if Input.is_action_just_pressed("mouse_left") and _is_selected:
 		emit_signal("played", self)
-		$Tween.interpolate_property($CardVisual, "position", $CardVisual.position, Vector2(0, 0), 0.1)
-		$Tween.start()
+		node_tween.interpolate_property(node_card_visual, "position", node_card_visual.position, Vector2(0, 0), 0.1)
+		node_tween.start()
 		_is_shown_selected = false
 	
 	if is_in_hand and _is_selected and not _is_shown_selected:
 		z_index = get_parent().get_child_count()
-		$Tween.interpolate_property($CardVisual, "position", Vector2(0, 0), Vector2(0, -20), 0.1)
-		$Tween.start()
+		node_tween.interpolate_property(node_card_visual, "position", Vector2(0, 0), Vector2(0, -20), 0.1)
+		node_tween.start()
 		_is_shown_selected = true
 	
 	if is_in_hand and not _is_selected and _is_shown_selected:
 		z_index = get_index()
-		$Tween.interpolate_property($CardVisual, "position", Vector2(0, -20), Vector2(0, 0), 0.1)
-		$Tween.start()
+		node_tween.interpolate_property(node_card_visual, "position", Vector2(0, -20), Vector2(0, 0), 0.1)
+		node_tween.start()
 		_is_shown_selected = false
 
 

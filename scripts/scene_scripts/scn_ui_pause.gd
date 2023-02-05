@@ -3,12 +3,15 @@ extends CanvasLayer
 
 var game_paused setget set_game_paused
 
+onready var node_pause_menu = $PauseMenu
+onready var node_ui_settings_menu = $ScnUiSettingsMenu
+
 
 func _unhandled_input(event):
 	if (
 		event.is_action_pressed("ui_pause")
 		and get_tree().get_current_scene().get_name().find("ScnUi") != 0
-		and $ScnUiSettingsMenu.visible == false
+		and node_ui_settings_menu.visible == false
 	):
 		self.game_paused = !game_paused
 
@@ -18,8 +21,8 @@ func _on_BtnResume_pressed():
 
 
 func _on_BtnSettings_pressed():
-	$PauseMenu.hide()
-	$ScnUiSettingsMenu.show()
+	node_pause_menu.hide()
+	node_ui_settings_menu.show()
 
 
 func _on_BtnMainMenu_pressed():
@@ -32,8 +35,8 @@ func _on_BtnQuit_pressed():
 	
 	
 func _on_ScnUiSettingsMenu_settings_saved():
-	$ScnUiSettingsMenu.hide()
-	$PauseMenu.show()
+	node_ui_settings_menu.hide()
+	node_pause_menu.show()
 
 
 func set_game_paused(value):

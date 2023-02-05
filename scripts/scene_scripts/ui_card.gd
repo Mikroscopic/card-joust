@@ -13,16 +13,22 @@ var power: int
 var health: int
 var value: int
 
+onready var node_tween = $Tween
+onready var node_art = $Background/Art
+onready var node_name = $Background/Name
+onready var node_power = $Background/Power
+onready var node_value = $Background/Value
+onready var node_health = $Background/Health
 
 func _ready():
 	if (SettingsController.graphics_roman_numerals):
-		find_node("Power").text = CardDictionary.get_numeral(power)
-		find_node("Value").text = CardDictionary.get_numeral(value)
-		find_node("Health").text = CardDictionary.get_numeral(health)
+		node_power.text = CardDictionary.get_numeral(power)
+		node_value.text = CardDictionary.get_numeral(value)
+		node_health.text = CardDictionary.get_numeral(health)
 	else:
-		find_node("Power").text = str(power)
-		find_node("Value").text = str(value)
-		find_node("Health").text = str(health)
+		node_power.text = str(power)
+		node_value.text = str(value)
+		node_health.text = str(health)
 	for stat in ["Power", "Value", "Health"]:
 		var regex = RegEx.new()
 		regex.compile("[0-9]")
@@ -31,10 +37,10 @@ func _ready():
 			n.set_theme(THEME_STATS_DIGITS)
 		else:
 			n.set_theme(THEME_STATS)
-	find_node("Name").text = card_name
+	node_name.text = card_name
 	if card_name.length() > 12:
 		var name_scale = min(1.0, 12.0 / card_name.length())
-		find_node("Name").rect_scale = Vector2(name_scale, name_scale)
+		node_name.rect_scale = Vector2(name_scale, name_scale)
 
 
 func init(id: String):
@@ -56,9 +62,9 @@ func init(id: String):
 
 func slide_to_position(pos, time):
 	time = time / SettingsController.graphics_animation_timescale
-	$Tween.interpolate_property(self, "global_position", global_position, pos, time, Tween.TRANS_LINEAR)
-	$Tween.start()
-	yield($Tween, "tween_completed")
+	node_tween.interpolate_property(self, "global_position", global_position, pos, time, Tween.TRANS_LINEAR)
+	node_tween.start()
+	yield(node_tween, "tween_completed")
 
 
 func select():

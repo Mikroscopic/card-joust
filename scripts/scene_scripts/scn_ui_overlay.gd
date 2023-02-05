@@ -1,5 +1,13 @@
 extends CanvasLayer
 
+onready var node_tween = $Tween
+onready var node_shade = $Shade
+onready var node_center_container = $CenterContainer
+onready var node_popup_start_battle = $CenterContainer/PopupStartBattle
+onready var node_popup_battle_lost = $CenterContainer/PopupBattleLost
+onready var node_popup_battle_won = $CenterContainer/PopupBattleWon
+onready var node_fade = $Fade
+
 
 func _on_BtnMenu_pressed():
 	SceneController.change_scene_fade("res://scenes/scn_ui_main_menu.tscn", 1.0)
@@ -24,52 +32,52 @@ func _on_BtnNext_pressed():
 func show_popup(popup):
 	match popup:
 		"battle_lost":
-			$Shade.show()
-			$CenterContainer/PopupBattleLost.show()
+			node_shade.show()
+			node_popup_battle_lost.show()
 		"battle_won":
-			$Shade.show()
-			$CenterContainer/PopupBattleWon.show()
+			node_shade.show()
+			node_popup_battle_won.show()
 
 
 func animate_popup(popup):
 	match popup:
 		"battle_begin":
-			$CenterContainer/PopupStartBattle.rect_scale = Vector2(0, 0)
+			node_popup_start_battle.rect_scale = Vector2(0, 0)
 			yield(get_tree(), "idle_frame")
-			$CenterContainer/PopupStartBattle.show()
-			$Tween.interpolate_property(
-				$CenterContainer/PopupStartBattle,
+			node_popup_start_battle.show()
+			node_tween.interpolate_property(
+				node_popup_start_battle,
 				"rect_scale",
 				Vector2(0, 0),
 				Vector2(1, 1),
 				0.5
 			)
-			$Tween.start()
-			yield($Tween, "tween_completed")
+			node_tween.start()
+			yield(node_tween, "tween_completed")
 			yield(get_tree().create_timer(1.0, false), "timeout")
 		_:
 			yield(get_tree(), "idle_frame")
 
 
 func hide_popup():
-	for child in $CenterContainer.get_children():
+	for child in node_center_container.get_children():
 		child.hide()
-	$Shade.hide()
+	node_shade.hide()
 
 
 func fade_in(color, time):
 	var start_color = color
 	start_color.a = 0
-	$Fade.show()
-	$Tween.interpolate_property($Fade, "color", start_color, color, time)
-	$Tween.start()
-	yield($Tween, "tween_completed")
+	node_fade.show()
+	node_tween.interpolate_property(node_fade, "color", start_color, color, time)
+	node_tween.start()
+	yield(node_tween, "tween_completed")
 
 
 func fade_out(time):
-	var end_color = $Fade.color
+	var end_color = node_fade.color
 	end_color.a = 0
-	$Tween.interpolate_property($Fade, "color", $Fade.color, end_color, time)
-	$Tween.start()
-	yield($Tween, "tween_completed")
-	$Fade.hide()
+	node_tween.interpolate_property(node_fade, "color", node_fade.color, end_color, time)
+	node_tween.start()
+	yield(node_tween, "tween_completed")
+	node_fade.hide()

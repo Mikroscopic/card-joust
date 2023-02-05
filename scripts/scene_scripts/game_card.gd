@@ -41,6 +41,15 @@ var _lane_space: int
 var _targets: Array
 var _target_position: Vector2
 
+onready var node_animation_player = $AnimationPlayer
+onready var node_tween = $Tween
+onready var node_card_visual = $CardVisual
+onready var node_art = $CardVisual/Art
+onready var node_name = $CardVisual/Name
+onready var node_power = $CardVisual/Power
+onready var node_value = $CardVisual/Value
+onready var node_health = $CardVisual/Health
+onready var node_sfx = $Sfx
 
 # Builtin functions
 
@@ -53,7 +62,7 @@ func _ready():
 	_targets = []
 	_target_position = global_position
 	update_stats()
-	find_node("Name").text = card_name
+	node_name.text = card_name
 	_battle_scene = get_tree().current_scene
 	if _card_owner == 0:
 		_ally_lane = _battle_scene.player_lane_cards
@@ -63,7 +72,7 @@ func _ready():
 		_enemy_lane = _battle_scene.player_lane_cards
 	if card_name.length() > 12:
 		var name_scale = min(1.0, 12.0 / card_name.length())
-		find_node("Name").rect_scale = Vector2(name_scale, name_scale)
+		node_name.rect_scale = Vector2(name_scale, name_scale)
 
 
 func init (id: String):
@@ -88,7 +97,7 @@ func init (id: String):
 
 func set_distance_to_target(value):
 	var angle = (_target_position - global_position).normalized()
-	$CardVisual.position = angle * value
+	node_card_visual.position = angle * value
 
 
 # Visual and animation functions
@@ -96,13 +105,13 @@ func set_distance_to_target(value):
 
 func update_stats():
 	if (SettingsController.graphics_roman_numerals):
-		find_node("Power").text = CardDictionary.get_numeral(power)
-		find_node("Value").text = CardDictionary.get_numeral(value)
-		find_node("Health").text = CardDictionary.get_numeral(health)
+		node_power.text = CardDictionary.get_numeral(power)
+		node_value.text = CardDictionary.get_numeral(value)
+		node_health.text = CardDictionary.get_numeral(health)
 	else:
-		find_node("Power").text = str(power)
-		find_node("Value").text = str(value)
-		find_node("Health").text = str(health)
+		node_power.text = str(power)
+		node_value.text = str(value)
+		node_health.text = str(health)
 	for stat in ["Power", "Value", "Health"]:
 		var regex = RegEx.new()
 		regex.compile("[0-9]")
@@ -116,9 +125,9 @@ func update_stats():
 func slide_to_position(pos, time, ignore_timescale = false):
 	if !ignore_timescale:
 		time = time / SettingsController.graphics_animation_timescale
-	$Tween.interpolate_property(self, "global_position", global_position, pos, time, Tween.TRANS_LINEAR)
-	$Tween.start()
-	yield($Tween, "tween_completed")
+	node_tween.interpolate_property(self, "global_position", global_position, pos, time, Tween.TRANS_LINEAR)
+	node_tween.start()
+	yield(node_tween, "tween_completed")
 
 
 func select():
@@ -184,12 +193,12 @@ func perform_attack():
 	for t in _targets:
 		if _enemy_lane[t]:
 			_target_position = _enemy_lane[t].global_position
-			$AnimationPlayer.play(
+			node_animation_player.play(
 				"attack_start",
 				-1,
 				SettingsController.graphics_animation_timescale
 			)
-			yield($AnimationPlayer, "animation_finished")
+			yield(node_animation_player, "animation_finished")
 			
 			match card_id:
 				"MEDIEVAL_THIEF":
@@ -202,12 +211,12 @@ func perform_attack():
 			
 			play_sound("attack")
 			var opposing_card_killed = _enemy_lane[t].take_damage(self, power)
-			$AnimationPlayer.play(
+			node_animation_player.play(
 				"attack_end",
 				-1,
 				SettingsController.graphics_animation_timescale
 			)
-			yield($AnimationPlayer, "animation_finished")
+			yield(node_animation_player, "animation_finished")
 			_target_position = global_position
 			
 			match card_id:
@@ -290,7 +299,7 @@ func take_damage(attacker, dmg):
 			health -= dmg
 			health = max(0, health)
 			power = health
-			$AnimationPlayer.play(
+			node_animation_player.play(
 				"shake",
 				-1,
 				SettingsController.graphics_animation_timescale
@@ -298,7 +307,7 @@ func take_damage(attacker, dmg):
 		_:
 			health -= dmg
 			health = max(0, health)
-			$AnimationPlayer.play(
+			node_animation_player.play(
 				"shake",
 				-1,
 				SettingsController.graphics_animation_timescale
@@ -321,7 +330,7 @@ func apply_status(status: String):
 			status_flags = status_flags | (1 << 0)
 			power = 0
 			value += 2
-			$CardVisual.modulate = Color(1.0, 0.8, 0.4)
+			node_card_visual.modulate = Color(1.0, 0.8, 0.4)
 			play_sound("gold")
 
 
@@ -339,13 +348,13 @@ func _on_board_state_changed():
 func play_sound(sound):
 	match sound:
 		"deal_a":
-			$Sfx.stream = snd_deal_a
+			node_sfx.stream = snd_deal_a
 		"deal_b":
-			$Sfx.stream = snd_deal_b
+			node_sfx.stream = snd_deal_b
 		"attack":
-			$Sfx.stream = snd_attack
+			node_sfx.stream = snd_attack
 		"move":
-			$Sfx.stream = snd_move[int(rand_range(0.0, snd_move.size()))]
+			node_sfx.stream = snd_move[int(rand_range(0.0, snd_move.size()))]
 		"gold":
-			$Sfx.stream = snd_gold
-	$Sfx.play()
+			node_sfx.stream = snd_gold
+	node_sfx.play()
