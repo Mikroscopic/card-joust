@@ -65,7 +65,7 @@ tracks/0/keys = {
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 128, 192 )
 
-[node name="GameCard" type="KinematicBody2D" groups=["cards"]]
+[node name="GameCard" type="KinematicBody2D" groups=["cards", "has_numerals"]]
 script = ExtResource( 1 )
 snd_deal_a = ExtResource( 8 )
 snd_deal_b = ExtResource( 9 )

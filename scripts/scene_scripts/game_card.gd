@@ -138,6 +138,10 @@ func deselect():
 	pass
 
 
+func update_numerals():
+	update_stats()
+
+
 # Gameplay functions
 
 

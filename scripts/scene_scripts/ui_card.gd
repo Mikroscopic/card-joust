@@ -21,22 +21,7 @@ onready var node_value = $Background/Value
 onready var node_health = $Background/Health
 
 func _ready():
-	if (SettingsController.graphics_roman_numerals):
-		node_power.text = CardDictionary.get_numeral(power)
-		node_value.text = CardDictionary.get_numeral(value)
-		node_health.text = CardDictionary.get_numeral(health)
-	else:
-		node_power.text = str(power)
-		node_value.text = str(value)
-		node_health.text = str(health)
-	for stat in ["Power", "Value", "Health"]:
-		var regex = RegEx.new()
-		regex.compile("[0-9]")
-		var n = find_node(stat)
-		if regex.search(n.text):
-			n.set_theme(THEME_STATS_DIGITS)
-		else:
-			n.set_theme(THEME_STATS)
+	update_stats()
 	node_name.text = card_name
 	if card_name.length() > 12:
 		var name_scale = min(1.0, 12.0 / card_name.length())
@@ -60,6 +45,25 @@ func init(id: String):
 	return self
 
 
+func update_stats():
+	if (SettingsController.graphics_roman_numerals):
+		node_power.text = CardDictionary.get_numeral(power)
+		node_value.text = CardDictionary.get_numeral(value)
+		node_health.text = CardDictionary.get_numeral(health)
+	else:
+		node_power.text = str(power)
+		node_value.text = str(value)
+		node_health.text = str(health)
+	for stat in ["Power", "Value", "Health"]:
+		var regex = RegEx.new()
+		regex.compile("[0-9]")
+		var n = find_node(stat)
+		if regex.search(n.text):
+			n.set_theme(THEME_STATS_DIGITS)
+		else:
+			n.set_theme(THEME_STATS)
+
+
 func slide_to_position(pos, time):
 	time = time / SettingsController.graphics_animation_timescale
 	node_tween.interpolate_property(self, "global_position", global_position, pos, time, Tween.TRANS_LINEAR)
@@ -73,3 +77,7 @@ func select():
 
 func deselect():
 	pass
+
+
+func update_numerals():
+	update_stats()

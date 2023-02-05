@@ -52,6 +52,8 @@ func set_graphics_animation_time_slider(v):
 
 func set_graphics_roman_numerals(v):
 	graphics_roman_numerals = v
+	for card in get_tree().get_nodes_in_group("has_numerals"):
+		card.update_numerals()
 
 
 func set_audio_master_volume(v):

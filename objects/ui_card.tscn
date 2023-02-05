@@ -8,7 +8,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 128, 192 )
 
-[node name="UiCard" type="KinematicBody2D" groups=["cards"]]
+[node name="UiCard" type="KinematicBody2D" groups=["cards", "has_numerals"]]
 script = ExtResource( 1 )
 
 [node name="Tween" type="Tween" parent="."]
